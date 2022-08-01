@@ -1,4 +1,4 @@
-console.log("Simple RTL Editor!")
+console.log("Simple Hardware Editor!")
 
 ///////////////////////////////////////////////////
 var url = new URLSearchParams(window.location.search)
