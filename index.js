@@ -1,0 +1,220 @@
+console.log("Simple RTL Editor!")
+
+///////////////////////////////////////////////////
+var url = new URLSearchParams(window.location.search)
+console.log(JSON.parse(url.get('chip')))
+var chip = JSON.parse(url.get('chip'))
+if (chip == null) chip = get_empty_chip()
+load(chip)
+///////////////////////////////////////////////////
+
+function count(device_name) {
+  var n = 0
+  for (var key in chip['devices']) {
+    if (chip['devices'][key].type == device_name || chip['devices'][key].celltype == device_name) {
+      n+=1
+    }
+  }
+  return n
+}
+
+function get_empty_chip() {
+  return {
+    devices: {},
+    connectors: [],
+    subcircuits: {}
+  }
+}
+
+function get_input_chip() {
+  return { 
+    type: "Button", 
+    label: "in_"+count('Button'), 
+    net: "in", 
+    order: 0, 
+    bits: 1,
+    position: {
+      x:0,
+      y:0
+    }
+  }
+}
+
+function get_output_chip() {
+  return { 
+    type: "Lamp", 
+    label: "out_"+count('Lamp'), 
+    net: "out", 
+    order: 0, 
+    bits: 1,
+    position: {
+      x:0,
+      y:0
+    }
+  }
+}
+
+function get_nand_chip() {
+  return {
+    type: "Nand",
+    label: "nand_"+count('Nand'),
+    bits:1
+  }
+}
+
+function get_clock_chip() {
+  return {
+    type: "Clock",
+    label: "clock_"+count('Clock'),
+    bits:1
+  }
+}
+
+function saved_chip(callback) {
+  global_callback = callback
+  input.click();
+}
+
+function selected_chip(callback) {
+  var selected = document.getElementById('components').value
+  switch (selected) {
+    case "nand": callback(get_nand_chip()); break;
+    case "in": callback(get_input_chip()); break;
+    case "out": callback(get_output_chip()); break;
+    case "clock": callback(get_clock_chip()); break;
+    case "saved_circuit": saved_chip(callback); break;
+    default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
+  }
+}
+
+function reset() {
+  console.log('Canvas reset')
+  chip = get_empty_chip()
+  load(chip)
+}
+
+function reload() {
+  console.log('Canvas reloaded')
+  chip = circuit.toJSON()
+  load(chip)
+}
+
+function save() {
+  var filename = 'chip.json'
+  var textInput = JSON.stringify(circuit.toJSON())
+  var element = document.createElement('a');
+  element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
+  element.setAttribute('download', filename);
+  document.body.appendChild(element);
+  element.click();
+}
+
+function remove() {
+  chip = circuit.toJSON()
+  var to_remove = document.getElementById("to_remove").value
+  for (var key in chip['devices']) {
+    if (chip['devices'][key].label == to_remove) {
+      delete chip['devices'][key]
+    }
+  }
+  load(chip)
+}
+
+function rename() {
+  chip = circuit.toJSON()
+  var to_rename = document.getElementById("to_rename").value
+  var new_name = document.getElementById("new_name").value
+  for (var key in chip['devices']) {
+    if (chip['devices'][key].label == to_rename ) {
+      chip['devices'][key].label = new_name
+    } 
+  }
+  load(chip)
+}
+
+function load(chip) {
+  if (chip['devices']==null) {
+    var component = chip
+    chip = get_empty_chip()
+    chip['devices']['dev0'] = component
+  }
+  circuit = new digitaljs.Circuit(chip)
+  circuit.displayOn($('#paper'));
+  circuit.start();
+  update_url()
+}
+
+function update_url() {
+  url.set("chip", JSON.stringify(circuit.toJSON()))
+  var nextURL = '?' + url.toString()
+  var nextTitle = document.title;
+  var nextState = { additionalInformation: 'Updated the URL with JS' };
+  window.history.replaceState(nextState, nextTitle, nextURL);
+}
+
+function add(to_add, is_subcircuit, subcircuit_type) {
+  chip = circuit.toJSON()
+  var n = Object.keys(chip['devices']).length + 1
+  if (is_subcircuit) {
+    chip['devices']['dev' + n] = {
+      type: "Subcircuit",
+      label: subcircuit_type + '_' + count(subcircuit_type),
+      celltype: subcircuit_type,
+    }
+    chip['subcircuits'] = subcircuitfy(to_add, subcircuit_type)
+  } else {
+    chip['devices']['dev' + n] = to_add
+  }
+  load(chip)
+}
+
+// Make a chip added as subcircuit into subcircuit form.
+function subcircuitfy(subcircuit, subcircuit_type) {
+  var to_return = chip['subcircuits']
+  // Add subcircuits of the chip being added to the subcircuits of the current circuit
+  var subsubcircuits = subcircuit['subcircuits']
+  for (var subsub in subsubcircuits) {
+    if (subsubcircuits[subsub]['type'] == "Lamp") {
+      subsubcircuits[subsub]['type'] == "Output"
+    } else if (subsubcircuits[subsub]['type'] == "Button") {
+      subsubcircuits[subsub]['type'] == "Input"
+    }
+    to_return[subsub] = subsubcircuits[subsub]
+  }
+  // Add chip currently being added to subcircuits, after having removed its own subcircuits
+  delete subcircuit.subcircuits
+  to_return[subcircuit_type] = subcircuit
+  return to_return
+}
+
+document.getElementById('add').onclick = function(){
+  selected_chip(add)
+  
+}
+document.getElementById('load').onclick = function(){
+  selected_chip(load)
+}
+document.getElementById('reset').onclick = reset
+document.getElementById('reload').onclick = reload
+document.getElementById('save').onclick = save
+document.getElementById('remove').onclick = remove
+document.getElementById('rename').onclick = rename
+
+
+var global_callback = undefined
+var last_read_file = undefined
+var input = document.createElement('input'); 
+input.type = 'file';
+input.onchange = e => {
+  last_read_file = e.target.files[0];
+  var reader = new FileReader();
+  reader.readAsText(last_read_file,'UTF-8');
+  reader.onload = readerEvent => {
+    var loaded_chip = JSON.parse(readerEvent.target.result);
+    // console.log('Loaded chip from file: ' + loaded_chip)
+    global_callback(loaded_chip, true, last_read_file.name.split('.')[0])
+  }
+  e.target.value = null
+}
+ 
+setInterval(update_url, 500);

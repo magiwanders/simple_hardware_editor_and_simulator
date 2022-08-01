@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple RTL Editor</title>
+</head>
+
+<body>
+
+    <h1>Simple RTL Editor</h1>
+    <!-- <h3>~60 lines of HTML and ~200 lines of JavaScript</h3> -->
+    <div>
+        <label for="components_label">Choose a component</label>
+        <select name="components" id="components">
+            <option value="saved_circuit">Saved Circuit</option>
+            <optgroup label="I/O Components">
+                <option value="in">Input Button</option>
+                <option value="out">Output Lamp</option>
+                <option value="clock">Clock</option>
+            </optgroup>
+            <optgroup label="Universal Gates">
+                <option value="nand">Nand</option>
+                <option value="nor">Nor (not implemented)</option>
+            </optgroup>
+            <optgroup label="Basic Combinational Gates">
+                <option value="not">Not (not implemented)</option>
+                <option value="and">And (not implemented)</option>
+                <option value="or">Or (not implemented)</option>
+            </optgroup>
+            <optgroup label="Basic Sequential Gates">
+                <option value="d_latch">D-Latch (not implemented)</option>
+                <option value="d_flip_flop">D-Flip-Flop (not implemented)</option>
+            </optgroup>
+        </select>
+
+        and 
+        <button id="add">Add</button>
+        it to the visualization or
+        <button id="load">Load</button>
+        it ex novo.
+    </div>
+    
+    <div>
+        <input type="text" name="to_remove" id="to_remove" placeholder="Name the component">
+        to 
+        <button id="remove">Remove</button>
+    </div>
+    <div>
+        <button id="rename">Rename</button>
+        <input type="text" name="to_rename" id="to_rename" placeholder="Component to rename">
+        to 
+        <input type="text" name="new_name" id="new_name" placeholder="New Name">
+    </div>
+    <div style="height:500px; width:800px; overflow: scroll; border-style: solid; pointer-events:painted;"><div id="paper"></div></div>
+    <!-- <button id="step">></button> -->
+    <button id="reload">Reload</button>
+    <button id="reset">Reset</button>
+    <button id="save">Save</button>
+
+    <script src="https://tilk.github.io/digitaljs/main.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>
