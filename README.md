@@ -1,3 +1,3 @@
-# simple_hardware_editor
+# S.H.E.A.S. - Simple Hardware Editor and Simulator
 
-A simple purely graphical hardware editor and simulator for educational purposes, based on DigitalJS visualization library.
+A prototype of a simple purely graphical hardware editor and simulator for educational purposes, based on [DigitalJS](https://github.com/tilk/digitaljs) visualization library. Available [here](sheas.magiwanders.com)
