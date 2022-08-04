@@ -62,6 +62,18 @@ function get_nand_chip() {
   }
 }
 
+function get_dff_chip() {
+  return {
+    type: "Dff",
+    label: "dff_"+count('Dff'),
+    bits:1,
+    polarity: {
+      clock: true,
+      enable: true,
+    },
+  }
+}
+
 function get_clock_chip() {
   return {
     type: "Clock",
@@ -81,6 +93,7 @@ function selected_chip(callback) {
     case "nand": callback(get_nand_chip()); break;
     case "in": callback(get_input_chip()); break;
     case "out": callback(get_output_chip()); break;
+    case "dff": callback(get_dff_chip()); break;
     case "clock": callback(get_clock_chip()); break;
     case "saved_circuit": saved_chip(callback); break;
     default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
@@ -91,6 +104,8 @@ function reset() {
   console.log('Canvas reset')
   chip = get_empty_chip()
   load(chip)
+  set_url(JSON.stringify(get_empty_chip()))
+  // console.log(chip)
 }
 
 function reload() {
@@ -100,21 +115,32 @@ function reload() {
 }
 
 function save() {
-  var filename = 'chip.json'
-  var textInput = JSON.stringify(circuit.toJSON())
-  var element = document.createElement('a');
-  element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
-  element.setAttribute('download', filename);
-  document.body.appendChild(element);
-  element.click();
+  if (count('Clock')>0) {
+    alert('Clocks are only for live demonstration, cannot save a circuit with clock!')
+  } else {
+    var filename = 'chip.json'
+    var textInput = JSON.stringify(circuit.toJSON())
+    var element = document.createElement('a');
+    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent(textInput));
+    element.setAttribute('download', filename);
+    document.body.appendChild(element);
+    element.click();
+  }
 }
 
 function remove() {
   chip = circuit.toJSON()
   var to_remove = document.getElementById("to_remove").value
+  var key_to_remove = undefined
   for (var key in chip['devices']) {
     if (chip['devices'][key].label == to_remove) {
+      key_to_remove = key
       delete chip['devices'][key]
+    }
+  }
+  for (var connection in chip['connectors']) {
+    if (chip['connectors'][connection].from.id == key_to_remove || chip['connectors'][connection].to.id == key_to_remove) {
+      delete chip['connectors'][connection]
     }
   }
   load(chip)
@@ -145,7 +171,15 @@ function load(chip) {
 }
 
 function update_url() {
-  url.set("chip", JSON.stringify(circuit.toJSON()))
+
+  document.getElementById('paper').setAttribute('pointer-events', 'all')
+  document.getElementById('paper').setAttribute('pointer-events', 'painted')
+
+  set_url(JSON.stringify(circuit.toJSON())) 
+}
+
+function set_url(new_url) {
+  url.set("chip", new_url)
   var nextURL = '?' + url.toString()
   var nextTitle = document.title;
   var nextState = { additionalInformation: 'Updated the URL with JS' };
