@@ -2,9 +2,12 @@ console.log("Simple Hardware Editor!")
 
 ///////////////////////////////////////////////////
 var url = new URLSearchParams(window.location.search)
-console.log(JSON.parse(url.get('chip')))
-var chip = JSON.parse(url.get('chip'))
-if (chip == null) chip = get_empty_chip()
+var chip = null//JSON.parse(LZString.decompress(url.get('chip')))
+if (LZString.decompressFromBase64(url.get('chip'))==null) {
+  chip = get_empty_chip() 
+} else {
+  chip = JSON.parse(LZString.decompressFromBase64(url.get('chip')))
+}
 load(chip)
 ///////////////////////////////////////////////////
 
@@ -114,6 +117,8 @@ function reload() {
   console.log('Canvas reloaded')
   chip = circuit.toJSON()
   load(chip)
+  update_url()
+  location.reload()
 }
 
 function save() {
@@ -206,12 +211,17 @@ function load(chip) {
   update_url()
 }
 
-function update_url() {
+function share() {
+  update_url()
+  if (url.get('chip').length >= 30000) {
+    alert('Circuit too big to be shared.')
+  }
+}
 
+function update_url() {
   document.getElementById('paper').setAttribute('pointer-events', 'all')
   document.getElementById('paper').setAttribute('pointer-events', 'painted')
-
-  set_url(JSON.stringify(circuit.toJSON())) 
+  set_url(LZString.compressToBase64(JSON.stringify(circuit.toJSON()))) 
 }
 
 function set_url(new_url) {
@@ -269,6 +279,7 @@ document.getElementById('reload').onclick = reload
 document.getElementById('save').onclick = save
 document.getElementById('remove').onclick = remove
 document.getElementById('rename').onclick = rename
+document.getElementById('share').onclick = share
 
 
 var global_callback = undefined
@@ -287,4 +298,6 @@ input.onchange = e => {
   e.target.value = null
 }
  
-setInterval(update_url, 500);
+// setInterval(update_url, 5000);
+
+window.onbeforeunload = update_url
