@@ -140,10 +140,36 @@ function remove() {
       delete chip['devices'][key]
     }
   }
+
+  var i = 0
+  var keys = chip['devices']
+  chip['devices'] = {}
+  for (var old_key in keys) {
+    i += 1
+    var new_key = 'dev' + i 
+    chip['devices'][new_key] = keys[old_key]
+    for (var connection in chip['connectors']) {
+      if(chip['connectors'][connection]['from'].id == old_key) {
+        chip['connectors'][connection]['from'].id = new_key
+      }
+      if(chip['connectors'][connection]['to'].id == old_key) {
+        chip['connectors'][connection]['to'].id = new_key
+      }
+    }
+  }
+
   for (var connection in chip['connectors']) {
     if (chip['connectors'][connection].from.id == key_to_remove || chip['connectors'][connection].to.id == key_to_remove) {
       delete chip['connectors'][connection]
     }
+  }
+
+  var i = 0
+  var connections = chip['connectors']
+  chip['connectors'] = []
+  for (var connection in connections) {
+    chip['connectors'][i] = connections[connection]
+    i += 1
   }
   load(chip)
 }
@@ -160,12 +186,15 @@ function rename() {
   for (var key in chip['devices']) {
     if (chip['devices'][key].label == to_rename ) {
       chip['devices'][key].label = new_name
+      chip['devices'][key].net = new_name
     } 
   }
     load(chip)
 }
 
 function load(chip) {
+  console.log('LOAD')
+  console.log(chip)
   if (chip['devices']==null) {
     var component = chip
     chip = get_empty_chip()
@@ -174,7 +203,6 @@ function load(chip) {
   circuit = new digitaljs.Circuit(chip)
   circuit.displayOn($('#paper'));
   circuit.start();
-  console.log(circuit.toJSON()['devices']['dev1'])
   update_url()
 }
 
