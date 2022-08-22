@@ -30,7 +30,7 @@ function get_input_chip() {
   return { 
     type: "Button", 
     label: "in_"+count('Button'), 
-    net: "in", 
+    net: "in_"+count('Button'), 
     order: 0, 
     bits: 1,
     position: {
@@ -44,6 +44,7 @@ function get_output_chip() {
   return { 
     type: "Lamp", 
     label: "out_"+count('Lamp'), 
+    net: "out_"+count('Lamp'), 
     net: "out", 
     order: 0, 
     bits: 1,
@@ -58,6 +59,7 @@ function get_nand_chip() {
   return {
     type: "Nand",
     label: "nand_"+count('Nand'),
+    net: "nand_"+count('Nand'),
     bits:1
   }
 }
@@ -151,11 +153,16 @@ function rename() {
   var to_rename = document.getElementById("to_rename").value
   var new_name = document.getElementById("new_name").value
   for (var key in chip['devices']) {
+    if (chip['devices'][key].label == new_name ) {
+      return
+    } 
+  }
+  for (var key in chip['devices']) {
     if (chip['devices'][key].label == to_rename ) {
       chip['devices'][key].label = new_name
     } 
   }
-  load(chip)
+    load(chip)
 }
 
 function load(chip) {
@@ -167,6 +174,7 @@ function load(chip) {
   circuit = new digitaljs.Circuit(chip)
   circuit.displayOn($('#paper'));
   circuit.start();
+  console.log(circuit.toJSON()['devices']['dev1'])
   update_url()
 }
 
