@@ -2,8 +2,8 @@ console.log("Simple Hardware Editor!")
 
 ///////////////////////////////////////////////////
 var url = new URLSearchParams(window.location.search)
-var chip = null//JSON.parse(LZString.decompress(url.get('chip')))
-if (LZString.decompressFromBase64(url.get('chip'))==null) {
+var chip = null
+if (LZString.decompressFromBase64(url.get('chip'))==null || LZString.decompressFromBase64(url.get('chip'))=='') {
   chip = get_empty_chip() 
 } else {
   chip = JSON.parse(LZString.decompressFromBase64(url.get('chip')))
@@ -121,8 +121,22 @@ function reload() {
   location.reload()
 }
 
+function toggle_simulation() {
+  if (document.getElementById('toggle_simulation').innerHTML=='Pause') {
+    document.getElementById('toggle_simulation').innerHTML='Play'
+    circuit.stop();
+  } else {
+    document.getElementById('toggle_simulation').innerHTML='Pause'
+    circuit.start();
+  }
+}
+
+function step() {
+  circuit.updateGates();
+}
+
 function save() {
-  if (count('Clock')>0) {
+  if (count('Clock')<0) {
     alert('Clocks are only for live demonstration, cannot save a circuit with clock!')
   } else {
     var filename = 'chip.json'
@@ -200,14 +214,31 @@ function rename() {
 function load(chip) {
   console.log('LOAD')
   console.log(chip)
+
+  // This happens when loading a component into the canvas not as blackbox but showing internals
   if (chip['devices']==null) {
     var component = chip
     chip = get_empty_chip()
     chip['devices']['dev0'] = component
   }
-  circuit = new digitaljs.Circuit(chip)
+
+  //
+  delete(circuit)
+  delete(monitor)
+  delete(monitorview)
+  circuit = new digitaljs.Circuit(chip);
+  monitor = new digitaljs.Monitor(circuit);
+  monitorview = new digitaljs.MonitorView({model: monitor, el: $('#monitor') });
+  iopanel = new digitaljs.IOPanelView({model: circuit, el: $('#iopanel') });
+
   circuit.displayOn($('#paper'));
-  circuit.start();
+  if (document.getElementById('toggle_simulation').innerHTML=='Play') {
+    circuit.stop();
+  } else {
+    circuit.start();
+  }
+  monitorview.live = true
+  monitorview.listenTo(this.model, 'add', () => {console.log('aaaaded')});
   update_url()
 }
 
@@ -267,6 +298,10 @@ function subcircuitfy(subcircuit, subcircuit_type) {
   return to_return
 }
 
+function debug() {
+  console.log(monitor.getWiresDesc())
+}
+
 document.getElementById('add').onclick = function(){
   selected_chip(add)
   
@@ -280,7 +315,11 @@ document.getElementById('save').onclick = save
 document.getElementById('remove').onclick = remove
 document.getElementById('rename').onclick = rename
 document.getElementById('share').onclick = share
-
+document.getElementById('toggle_simulation').onclick = toggle_simulation
+document.getElementById('step').onclick = step
+document.getElementById('debug').onclick = debug
+document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2;}
+document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2; }
 
 var global_callback = undefined
 var last_read_file = undefined
