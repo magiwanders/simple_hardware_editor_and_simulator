@@ -216,12 +216,28 @@ function name_already_present(name) {
   return false
 }
 
+// Retrieves the saved chip that the user wants to <callback>.
+// <callback> can be either add to or load into the simulation
 function saved_chip(callback) {
-  global_callback = callback
+  var last_read_file = undefined
+  var input = document.createElement('input'); 
+  input.type = 'file';
+  input.onchange = e => {
+    last_read_file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(last_read_file,'UTF-8');
+    reader.onload = readerEvent => {
+      var loaded_chip = JSON.parse(readerEvent.target.result);
+      // console.log('Loaded chip from file: ' + loaded_chip)
+      callback(loaded_chip, true, last_read_file.name.split('.')[0])
+    }
+    e.target.value = null
+  }
   input.click();
 }
 
-// Callback can be either add or load the chip selected in the curtain input by the user.
+// Retrieves the chip selected in the curtain input by the user to <callback>.
+// <callback> can be either add to or load into the simulation
 // If a saved chip is requested, the callback gets passed to the saved chip selector.
 function selected_chip(callback) {
   var selected = document.getElementById('components').value
@@ -352,20 +368,4 @@ document.getElementById('debug').setAttribute('visible', false)
 document.getElementById('debug').onclick = debug
 function debug() {
   console.log(monitor.getWiresDesc())
-}
-
-var global_callback = undefined
-var last_read_file = undefined
-var input = document.createElement('input'); 
-input.type = 'file';
-input.onchange = e => {
-  last_read_file = e.target.files[0];
-  var reader = new FileReader();
-  reader.readAsText(last_read_file,'UTF-8');
-  reader.onload = readerEvent => {
-    var loaded_chip = JSON.parse(readerEvent.target.result);
-    // console.log('Loaded chip from file: ' + loaded_chip)
-    global_callback(loaded_chip, true, last_read_file.name.split('.')[0])
-  }
-  e.target.value = null
 }
