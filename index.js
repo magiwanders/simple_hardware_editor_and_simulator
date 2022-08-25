@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
   }
+  document.getElementById('components').value = url.get('select')
   update_url() 
   // setInterval(update_url, 5000);
   window.onbeforeunload = update_url
@@ -164,11 +165,12 @@ function share() {
 }
 
 function update_url() {
-  set_url(LZString.compressToBase64(JSON.stringify(circuit.toJSON()))) 
+  set_url('select', document.getElementById('components').value)
+  set_url('chip', LZString.compressToBase64(JSON.stringify(circuit.toJSON()))) 
 }
 
-function set_url(new_url) {
-  url.set("chip", new_url)
+function set_url(label, new_value) {
+  url.set(label, new_value)
   var nextURL = '?' + url.toString()
   var nextTitle = document.title;
   var nextState = { additionalInformation: 'Updated the URL with JS' };
