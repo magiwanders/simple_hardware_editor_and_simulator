@@ -135,7 +135,10 @@ function load(chip_to_load, reload=true) {
     circuit.start();
   }
   monitorview.live = true
-  monitorview.listenTo(this.model, 'add', () => {console.log('Wire added to monitor.')});
+  monitor.on('add', () => {
+    console.log('Wire added to monitor.')
+    // TODO: REFRESH THE SIGNAL MONITOR
+  });
   document.getElementById('paper').setAttribute('pointer-events', 'all')
   document.getElementById('paper').setAttribute('pointer-events', 'painted')
 
