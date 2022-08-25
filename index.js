@@ -162,6 +162,7 @@ function save() {
 
 function share() {
   update_url()
+  navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
   if (url.get('chip').length >= 30000) {
     alert('Circuit too big to be shared.')
   }
@@ -368,8 +369,12 @@ function subcircuitfy(subcircuit, subcircuit_type) {
 
 //#endregion
 
+//#region LESSON FUNCTIONS
+
+//#endregion
+
 // DEBUG FUNCTION (utility)
-document.getElementById('debug').setAttribute('visible', false)
+document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
   console.log(monitor.getWiresDesc())
