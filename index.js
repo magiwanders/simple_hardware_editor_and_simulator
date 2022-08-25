@@ -190,7 +190,7 @@ function set_url(label, new_value) {
   var nextURL = '?' + url.toString()
   var nextTitle = document.title;
   var nextState = { additionalInformation: 'Updated the URL with JS' };
-  window.history.replaceState(nextState, nextTitle, nextURL);
+  window.history.pushState(nextState, nextTitle, nextURL);
 }
 
 //#endregion
