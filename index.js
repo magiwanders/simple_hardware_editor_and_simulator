@@ -138,7 +138,9 @@ function load(chip_to_load, reload=true) {
   monitor.on('add', () => {
     console.log('Wire added to monitor.')
     // TODO: REFRESH THE SIGNAL MONITOR
+    monitorview._drawAll();
   });
+  monitorview.on('change', () => {monitorview._drawAll();})
   document.getElementById('paper').setAttribute('pointer-events', 'all')
   document.getElementById('paper').setAttribute('pointer-events', 'painted')
 
@@ -196,8 +198,8 @@ document.getElementById('rename').onclick = rename_chip
 document.getElementById('toggle_simulation').onclick = toggle_simulation
 document.getElementById('step').onclick = step
 // Handlers for zoom of signal monitors
-document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2;}
-document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2; }
+document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2; }
+document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2;}
 
 // Counts number of currently displayed devices
 function count(device_name) {
