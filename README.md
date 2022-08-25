@@ -7,9 +7,4 @@ A prototype of a simple purely graphical hardware editor and simulator for educa
 ![screenshot](./docs/screenshot.png)
 
 ### Documentation
-See the [getting started tutorial](docs/getting_started.md) or the examples:
- - [Lesson on Pipelining](docs/examples/pipelining.md)
- - More to come...
-
-
-knitr::include_url("https://yihui.org")
+See the [getting started tutorial](docs/getting_started.md)
