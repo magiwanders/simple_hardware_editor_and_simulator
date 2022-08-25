@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('components').value = url.get('select')
   update_url() 
   // setInterval(update_url, 5000);
-  window.onbeforeunload = update_url
+  window.onbeforeunload = shutdown
 })
 //#endregion
 
@@ -95,6 +95,14 @@ document.getElementById('reload').onclick = reload
 document.getElementById('save').onclick = save
 document.getElementById('share').onclick = share
 
+function shutdown() {
+  update_url()
+  monitorview.shutdown()
+  iopanel.shutdown()
+  circuit.stop()
+  monitor.shutdown()
+}
+
 function reset() {
   console.log('Canvas reset...')
   load(get_empty_chip())
@@ -163,11 +171,13 @@ function save() {
 }
 
 function share() {
+  document.getElementById('share').innerHTML = 'Copied to clipboard ✓'
   update_url()
   navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
   if (url.get('chip').length >= 30000) {
     alert('Circuit too big to be shared.')
   }
+  setTimeout(() => {document.getElementById('share').innerHTML = 'Share'}, 1000);
 }
 
 function update_url() {
@@ -200,6 +210,9 @@ document.getElementById('step').onclick = step
 // Handlers for zoom of signal monitors
 document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2; }
 document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2;}
+document.getElementById('left').onclick = (e) => { monitorview.start -= monitorview._width / monitorview.pixelsPerTick / 4;};
+document.getElementById('right').onclick = (e) => { monitorview.start += monitorview._width / monitorview.pixelsPerTick / 4;};
+
 
 // Counts number of currently displayed devices
 function count(device_name) {
