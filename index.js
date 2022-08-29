@@ -490,7 +490,7 @@ function subcircuitfy(subcircuit, subcircuit_type) {
 //#endregion
 
 // DEBUG FUNCTION (utility)
-// document.getElementById('debug').style.visibility = 'hidden'
+document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
   chip.devices.dev1 = {
