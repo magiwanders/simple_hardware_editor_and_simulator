@@ -1,8 +1,8 @@
 //#region SETUP
 // This contains the code that loads the tool into existance at page load.
-console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
 var url, chip, circuit, monitor, monitorview, iopanel, paper;
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
   url = new URLSearchParams(window.location.search)
   // Check if the URL actually contains some chip to load, if not load empty chip
   if (LZString.decompressFromBase64(url.get('chip'))==null || LZString.decompressFromBase64(url.get('chip'))=='') {
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
   }
   document.getElementById('components').value = url.get('select')
+  display_additional_settings()
   update_url() 
   // setInterval(update_url, 5000);
   window.onbeforeunload = shutdown
@@ -28,31 +29,64 @@ function get_empty_chip() {
 }
 
 function get_input_chip() {
-  return { 
-    type: "Button", 
-    label: "in_"+count('Button'), 
-    net: "in_"+count('Button'), 
-    order: 0, 
-    bits: 1,
-    position: {
-      x:0,
-      y:0
+  var bits = parseInt(document.getElementById('bits').value)
+  var n_inputs = count('Button') + count('NumEntry')
+  if (bits==1 || isNaN(bits)) {
+    return { 
+      type: "Button", 
+      label: "in_"+n_inputs,
+      net: "in_"+n_inputs,
+      order: 0, 
+      bits: 1,
+      position: {
+        x:0,
+        y:0
+      }
+    }
+  } else {
+    return { 
+      type: "NumEntry", 
+      label: "in_"+n_inputs,
+      net: "in_"+n_inputs,
+      bits: bits,
+      numbase: 'hex',
+      position: {
+        x:0,
+        y:0
+      }
     }
   }
 }
 
 function get_output_chip() {
-  return { 
-    type: "Lamp", 
-    label: "out_"+count('Lamp'), 
-    net: "out_"+count('Lamp'), 
-    order: 0, 
-    bits: 1,
-    position: {
-      x:0,
-      y:0
+  var bits = parseInt(document.getElementById('bits').value)
+  var n_outputs = count('Lamp') + count('NumDisplay')
+  if (bits==1 || isNaN(bits)) {
+    return { 
+      type: "Lamp", 
+      label: "out_"+n_outputs, 
+      net: "out_"+n_outputs, 
+      order: 0, 
+      bits: 1,
+      position: {
+        x:0,
+        y:0
+      }
+    }
+  } else {
+    return { 
+      type: "NumDisplay", 
+      label: "out_"+n_outputs,
+      net: "out_"+n_outputs,
+      bits: bits,
+      numbase: 'hex',
+      position: {
+        x:0,
+        y:0
+      }
     }
   }
+
 }
 
 function get_nand_chip() {
@@ -60,7 +94,16 @@ function get_nand_chip() {
     type: "Nand",
     label: "nand_"+count('Nand'),
     net: "nand_"+count('Nand'),
-    bits:1
+    bits: parseInt(document.getElementById('bits').value),
+  }
+}
+
+function get_nor_chip() {
+  return {
+    type: "Nor",
+    label: "nor_"+count('Nor'),
+    net: "nor_"+count('Nor'),
+    bits: parseInt(document.getElementById('bits').value),
   }
 }
 
@@ -69,11 +112,31 @@ function get_dff_chip() {
     type: "Dff",
     label: "dff_"+count('Dff'),
     net: "dff_"+count('Dff'),
-    bits:1,
+    bits:parseInt(document.getElementById('bits').value),
     polarity: {
       clock: true,
       enable: true,
     },
+  }
+}
+
+function get_memory_chip() {
+  var mem_bits = parseInt(document.getElementById('mem_bits').value)
+  var mem_length = parseInt(Math.pow(2, mem_bits))
+  return {
+    type: "Memory",
+    label: "memory_"+count('Memory'),
+    bits: 8,   // Word Width
+    abits: mem_bits,  // Address Bits
+    words: mem_length,  // Number of Words
+    offset: 0,
+    position: {
+      x:0,
+      y:0
+    },
+    rdports: [{transparent: true}],
+    wrports: [{clock_polarity: true}],
+    memdata: [mem_length, '00000000']
   }
 }
 
@@ -126,10 +189,8 @@ function load(chip_to_load, reload=true) {
   }
 
   // Reinstantiate circuit
-  delete(circuit)
-  delete(paper)
-  delete(monitor)
-  delete(monitorview)
+  if (circuit) circuit.shutdown()
+  if (monitorview) monitorview.shutdown()
   circuit = new digitaljs.Circuit(chip);
   monitor = new digitaljs.Monitor(circuit);
   monitorview = new digitaljs.MonitorView({model: monitor, el: $('#monitor') });
@@ -196,7 +257,7 @@ function set_url(label, new_value) {
 //#endregion
 
 //#region SIMULATION FUNCTIONS
-
+document.getElementById('components').onchange = display_additional_settings
 document.getElementById('add').onclick = function(){
   selected_chip(add)
 }
@@ -237,6 +298,44 @@ function name_already_present(name) {
   return false
 }
 
+function display_additional_settings() {
+  var selected = document.getElementById('components').value
+  console.log('Setup additional settings for component ' + selected)
+  document.getElementById('additional_settings').innerHTML = ''
+  switch (selected) {
+    case 'saved_circuit': break;
+    case 'in': add_bits_option(); break;
+    case 'out': add_bits_option(); break;
+    case 'nand': add_bits_option(); break;
+    case 'nor': add_bits_option(); break;
+    case 'dff': add_bits_option(); break;
+    case 'memory': add_memory_options(); break;
+    default: break;
+  }
+}
+
+function add_bits_option() {
+  var bits = document.createElement("INPUT");
+  bits.setAttribute("type", "number");
+  bits.min = 1
+  bits.max = 64
+  bits.id = 'bits'
+  document.getElementById('additional_settings').appendChild(bits)
+  document.getElementById('additional_settings').innerHTML = 'of ' + document.getElementById('additional_settings').innerHTML + ' bits '
+  document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
+}
+
+function add_memory_options() {
+  var mem_bits = document.createElement("INPUT");
+  mem_bits.setAttribute("type", "number");
+  mem_bits.min = 1
+  mem_bits.max = 64
+  mem_bits.id = 'mem_bits'
+  document.getElementById('additional_settings').appendChild(mem_bits)
+  document.getElementById('additional_settings').innerHTML = 'that is addressed with ' + document.getElementById('additional_settings').innerHTML + ' bits '
+  document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
+}
+
 // Retrieves the saved chip that the user wants to <callback>.
 // <callback> can be either add to or load into the simulation
 function saved_chip(callback) {
@@ -264,10 +363,12 @@ function selected_chip(callback) {
   var selected = document.getElementById('components').value
   switch (selected) {
     case "nand": callback(get_nand_chip()); break;
+    case "nor": callback(get_nor_chip()); break;
     case "in": callback(get_input_chip()); break;
     case "out": callback(get_output_chip()); break;
     case "dff": callback(get_dff_chip()); break;
     case "clock": callback(get_clock_chip()); break;
+    case "memory": callback(get_memory_chip()); break;
     case "saved_circuit": saved_chip(callback); break;
     default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
   }
@@ -389,8 +490,24 @@ function subcircuitfy(subcircuit, subcircuit_type) {
 //#endregion
 
 // DEBUG FUNCTION (utility)
-document.getElementById('debug').style.visibility = 'hidden'
+// document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
-  console.log(monitor.getWiresDesc())
+  chip.devices.dev1 = {
+    type: "Memory",
+    label: "memory_"+count('Memory'),
+    bits: 16,   // Word Width
+    abits: 4,  // Address Bits
+    words: 16,  // Number of Words
+    offset: 0,
+    position: {
+      x:0,
+      y:0
+    },
+    rdports: [{transparent: true}],
+    wrports: [{clock_polarity: true}],
+    memdata: [16, '0000000000000000']
+  }
+  console.log(chip.devices.dev1.memdata)
+  load(chip)
 }

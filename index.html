@@ -9,7 +9,7 @@
 
 <body>
 
-    <div ><h1 style="display: inline-block;">Simple Hardware Editor And Simulator</h1>   v0.8</div>
+    <div ><h1 style="display: inline-block;">Simple Hardware Editor And Simulator</h1>   v0.9</div>
         <!-- <h3>~60 lines of HTML and ~200 lines of JavaScript</h3> -->
         <!-- <div>
             <label for="lessons_label">Choose a lesson</label>
@@ -33,41 +33,41 @@
                 <optgroup label="I/O Components">
                     <option value="in">Input Button</option>
                     <option value="out">Output Lamp</option>
-                    <option value="number_in">Number Input (not implemented)</option>
-                    <option value="number_out">Number Output (not implemented)</option>
                     <option value="clock">Clock</option>
+                    <option value="constant">Constant Input (not implemented)</option>
+                    <option value="7segment">7-Segment Display (not implemented)</option>
                 </optgroup>
                 <optgroup label="Universal Gates">
                     <option value="nand">Nand</option>
-                    <option value="nor">Nor (not implemented)</option>
+                    <option value="nor">Nor</option>
                 </optgroup>
                 <optgroup label="Basic Combinational Gates">
                     <option value="not">Not (not implemented)</option>
                     <option value="and">And (not implemented)</option>
                     <option value="or">Or (not implemented)</option>
                 </optgroup>
-                <optgroup label="Basic Sequential Gates">
+                <optgroup label="Sequential Circuits">
                     <option value="d_latch">D-Latch (not implemented)</option>
-                    <option value="dff">D-Flip-Flop</option>
+                    <option value="dff">Register (D-Flip-Flop) </option>
+                    <option value="memory">Memory</option>
                 </optgroup>
                 <optgroup label="Other Combinational Gates">
+                    <option value="repeater">Repeater (not implemented)</option>
+                    <option value="nor">Nor (not implemented)</option>
                     <option value="xor">Xor (not implemented)</option>
-                    <option value="xnor">Xnor (not implemented)</option>
-                </optgroup>
-                <optgroup label="Other Sequential Gates">
-                    <option value="xor">Xor (not implemented)</option>
-                    <option value="memory">Memory (not implemented)</option>
-                </optgroup>
-                <optgroup label="Comparators">
+                    <option value="shiftL">Shift Left (not implemented)</option>
+                    <option value="shiftR">Shift Right (not implemented)</option>
                     <option value="eq">Equal (not implemented)</option>
                     <option value="ne">Not Equal (not implemented)</option>
                     <option value="lt">Less Than (not implemented)</option>
                     <option value="le">Less or Equal (not implemented)</option>
                     <option value="gt">Greater Than (not implemented)</option>
                     <option value="ge">Greater or Equal (not implemented)</option>
+                    <option value="neg">Negation (not implemented)</option>
+                    <option value="una">Unary Plus (not implemented)</option>
                 </optgroup>
             </select>
-    
+            <div id='additional_settings' style='display: inline-block;'></div>
             and
             <button id="add">Add</button>
             it to the visualization or
@@ -105,8 +105,9 @@
         <!-- <div id="iopanel">
         </div> -->
 
-    <script src="lz-string.js"></script>
-    <script src="https://tilk.github.io/digitaljs/main.js"></script>
+    <script src="lz-string_backup.js"></script>
+    <!-- <script src="https://tilk.github.io/digitaljs/main.js"></script> -->
+    <script src="digitaljs_webpack_backup.js"></script>
     <script src="index.js"></script>
 
 
