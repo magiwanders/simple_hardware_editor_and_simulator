@@ -4,151 +4,22 @@ var url, chip, circuit, monitor, monitorview, iopanel, paper;
 document.addEventListener('DOMContentLoaded', () => {
   console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
   url = new URLSearchParams(window.location.search)
-  // Check if the URL actually contains some chip to load, if not load empty chip
-  if (LZString.decompressFromBase64(url.get('chip'))==null || LZString.decompressFromBase64(url.get('chip'))=='') {
-    load(get_empty_chip(), false)
+  if(localStorage.getItem('huge')=='true') {
+    load(JSON.parse(LZString.decompressFromBase64(localStorage.getItem('chip'))), false)
   } else {
-    load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
+     // Check if the URL actually contains some chip to load, if not load empty chip
+    if (LZString.decompressFromBase64(url.get('chip'))==null || LZString.decompressFromBase64(url.get('chip'))=='') {
+      load(get_empty_chip(), false)
+    } else {
+      load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
+    } 
   }
   document.getElementById('components').value = url.get('select')
   display_additional_settings()
-  update_url() 
+  update_url_or_cookie() 
   // setInterval(update_url, 5000);
   window.onbeforeunload = shutdown
 })
-//#endregion
-
-//#region CHIPS
-
-function get_empty_chip() {
-  return {
-    devices: {},
-    connectors: [],
-    subcircuits: {}
-  }
-}
-
-function get_input_chip() {
-  var bits = parseInt(document.getElementById('bits').value)
-  var n_inputs = count('Button') + count('NumEntry')
-  if (bits==1 || isNaN(bits)) {
-    return { 
-      type: "Button", 
-      label: "in_"+n_inputs,
-      net: "in_"+n_inputs,
-      order: 0, 
-      bits: 1,
-      position: {
-        x:0,
-        y:0
-      }
-    }
-  } else {
-    return { 
-      type: "NumEntry", 
-      label: "in_"+n_inputs,
-      net: "in_"+n_inputs,
-      bits: bits,
-      numbase: 'hex',
-      position: {
-        x:0,
-        y:0
-      }
-    }
-  }
-}
-
-function get_output_chip() {
-  var bits = parseInt(document.getElementById('bits').value)
-  var n_outputs = count('Lamp') + count('NumDisplay')
-  if (bits==1 || isNaN(bits)) {
-    return { 
-      type: "Lamp", 
-      label: "out_"+n_outputs, 
-      net: "out_"+n_outputs, 
-      order: 0, 
-      bits: 1,
-      position: {
-        x:0,
-        y:0
-      }
-    }
-  } else {
-    return { 
-      type: "NumDisplay", 
-      label: "out_"+n_outputs,
-      net: "out_"+n_outputs,
-      bits: bits,
-      numbase: 'hex',
-      position: {
-        x:0,
-        y:0
-      }
-    }
-  }
-
-}
-
-function get_nand_chip() {
-  return {
-    type: "Nand",
-    label: "nand_"+count('Nand'),
-    net: "nand_"+count('Nand'),
-    bits: parseInt(document.getElementById('bits').value),
-  }
-}
-
-function get_nor_chip() {
-  return {
-    type: "Nor",
-    label: "nor_"+count('Nor'),
-    net: "nor_"+count('Nor'),
-    bits: parseInt(document.getElementById('bits').value),
-  }
-}
-
-function get_dff_chip() {
-  return {
-    type: "Dff",
-    label: "dff_"+count('Dff'),
-    net: "dff_"+count('Dff'),
-    bits:parseInt(document.getElementById('bits').value),
-    polarity: {
-      clock: true,
-      enable: true,
-    },
-  }
-}
-
-function get_memory_chip() {
-  var mem_bits = parseInt(document.getElementById('mem_bits').value)
-  var mem_length = parseInt(Math.pow(2, mem_bits))
-  return {
-    type: "Memory",
-    label: "memory_"+count('Memory'),
-    bits: 8,   // Word Width
-    abits: mem_bits,  // Address Bits
-    words: mem_length,  // Number of Words
-    offset: 0,
-    position: {
-      x:0,
-      y:0
-    },
-    rdports: [{transparent: true}],
-    wrports: [{clock_polarity: true}],
-    memdata: [mem_length, '00000000']
-  }
-}
-
-function get_clock_chip() {
-  return {
-    type: "Clock",
-    label: "clock_"+count('Clock'),
-    net: "clock_"+count('Clock'),
-    bits:1
-  }
-}
-
 //#endregion
 
 //#region PAGE-WIDE FUNCTIONS
@@ -159,11 +30,11 @@ document.getElementById('save').onclick = save
 document.getElementById('share').onclick = share
 
 function shutdown() {
-  update_url()
+  update_url_or_cookie()
   monitorview.shutdown()
   iopanel.shutdown()
   circuit.stop()
-  monitor.shutdown()
+  // monitor.shutdown()
 }
 
 function reset() {
@@ -174,51 +45,6 @@ function reset() {
 function reload() {
   console.log('Canvas reloaded')
   load(circuit.toJSON())
-}
-
-function load(chip_to_load, reload=true) {
-  console.log('LOAD')
-  console.log(chip_to_load)
-  chip = chip_to_load
-
-  // This happens when loading a component into the canvas not as blackbox but showing internals
-  if (chip_to_load['devices']==null) {
-    var component = chip_to_load
-    chip = get_empty_chip()
-    chip['devices']['dev0'] = component
-  }
-
-  // Reinstantiate circuit
-  if (circuit) circuit.shutdown()
-  if (monitorview) monitorview.shutdown()
-  circuit = new digitaljs.Circuit(chip);
-  monitor = new digitaljs.Monitor(circuit);
-  monitorview = new digitaljs.MonitorView({model: monitor, el: $('#monitor') });
-  iopanel = new digitaljs.IOPanelView({model: circuit, el: $('#iopanel') });
-  paper = circuit.displayOn($('#paper'));
-
-  // Reinstate simulation
-  if (document.getElementById('toggle_simulation').innerHTML=='Play') {
-    circuit.stop();
-  } else {
-    circuit.start();
-  }
-  monitorview.live = true
-  monitor.on('add', () => {
-    console.log('Wire added to monitor.')
-    // TODO: REFRESH THE SIGNAL MONITOR
-    monitorview._drawAll();
-  });
-  monitorview.on('change', () => {monitorview._drawAll();})
-  document.getElementById('paper').setAttribute('pointer-events', 'all')
-  document.getElementById('paper').setAttribute('pointer-events', 'painted')
-
-  // Reload
-  
-  if (reload) {
-    update_url()
-    location.reload()
-  }
 }
 
 function save() {
@@ -232,18 +58,29 @@ function save() {
 }
 
 function share() {
+  var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
   document.getElementById('share').innerHTML = 'Copied to clipboard ✓'
-  update_url()
-  navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
-  if (url.get('chip').length >= 30000) {
-    alert('Circuit too big to be shared.')
+  if (compressed_circuit.length > 30000) {
+    navigator.clipboard.writeText(compressed_circuit);
+    alert('Circuit too big to be shared by URL. The circuit has been copied to the clipboard anyway, get it back into SHEAS using the "Huge Circuit" option in the components dropdown WHILE HOLDING THE CHIP IN THE CLIPBOARD!')
+  } else {
+    update_url_or_cookie()
+    navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
   }
   setTimeout(() => {document.getElementById('share').innerHTML = 'Share'}, 1000);
 }
 
-function update_url() {
+function update_url_or_cookie() {
+  var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
+  if (compressed_circuit.length > 30000) {
+    // alert('Chip is to big to be saved in the url. It will be saved as a cookie.')
+    localStorage.setItem("huge", 'true');
+    localStorage.setItem("chip", compressed_circuit);
+  } else {
+    localStorage.setItem("huge", 'false');
+    set_url('chip', compressed_circuit) 
+  }
   set_url('select', document.getElementById('components').value)
-  set_url('chip', LZString.compressToBase64(JSON.stringify(circuit.toJSON()))) 
 }
 
 function set_url(label, new_value) {
@@ -276,10 +113,11 @@ document.getElementById('right').onclick = (e) => { monitorview.start += monitor
 
 
 // Counts number of currently displayed devices
-function count(device_name) {
+function count(device_name, chip_to_research) {
+  if (chip_to_research==undefined) chip_to_research = chip
   var n = 0
-  for (var key in chip['devices']) {
-    if (chip['devices'][key].type == device_name || chip['devices'][key].celltype == device_name) {
+  for (var key in chip_to_research['devices']) {
+    if (chip_to_research['devices'][key].type == device_name || chip_to_research['devices'][key].celltype == device_name) {
       n+=1
     }
   }
@@ -303,7 +141,6 @@ function display_additional_settings() {
   console.log('Setup additional settings for component ' + selected)
   document.getElementById('additional_settings').innerHTML = ''
   switch (selected) {
-    case 'saved_circuit': break;
     case 'in': add_bits_option(); break;
     case 'out': add_bits_option(); break;
     case 'nand': add_bits_option(); break;
@@ -336,26 +173,6 @@ function add_memory_options() {
   document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
 }
 
-// Retrieves the saved chip that the user wants to <callback>.
-// <callback> can be either add to or load into the simulation
-function saved_chip(callback) {
-  var last_read_file = undefined
-  var input = document.createElement('input'); 
-  input.type = 'file';
-  input.onchange = e => {
-    last_read_file = e.target.files[0];
-    var reader = new FileReader();
-    reader.readAsText(last_read_file,'UTF-8');
-    reader.onload = readerEvent => {
-      var loaded_chip = JSON.parse(readerEvent.target.result);
-      // console.log('Loaded chip from file: ' + loaded_chip)
-      callback(loaded_chip, true, last_read_file.name.split('.')[0])
-    }
-    e.target.value = null
-  }
-  input.click();
-}
-
 // Retrieves the chip selected in the curtain input by the user to <callback>.
 // <callback> can be either add to or load into the simulation
 // If a saved chip is requested, the callback gets passed to the saved chip selector.
@@ -370,6 +187,9 @@ function selected_chip(callback) {
     case "clock": callback(get_clock_chip()); break;
     case "memory": callback(get_memory_chip()); break;
     case "saved_circuit": saved_chip(callback); break;
+    case "huge_circuit": huge_chip(callback); break;
+    case "singlecycle": singlecycle_chip(callback); break;
+    case "pipeline": pipelined_chip(callback); break;
     default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
   }
 }
@@ -447,19 +267,29 @@ function rename_chip() {
 }
 
 // Add either component or saved subcircuit to simulation
-function add(to_add, is_subcircuit, subcircuit_type) {
+function add(to_add, is_subcircuit, subcircuit_type, as_component) {
   var new_chip = circuit.toJSON() // Save current chip
-  var n = Object.keys(new_chip['devices']).length + 1 
+  var n_dev = Object.keys(new_chip['devices']).length + 1 
+  var n_sub = Object.keys(new_chip['subcircuits']).length + 1 
   if (name_already_present(to_add.label)) return
   if (is_subcircuit) {
-    new_chip['devices']['dev' + n] = {
-      type: "Subcircuit",
-      label: subcircuit_type + '_' + count(subcircuit_type),
-      celltype: subcircuit_type,
+    if(as_component) {
+      // In case a subcircuit has to be added just as component
+      new_chip['devices']['dev' + n_dev] = to_add.devices.dev1 
+      for (var subsub in to_add['subcircuits']) {
+        new_chip['subcircuits'][subsub] = to_add['subcircuits'][subsub]
+      }
+    } else {
+      // Normal subcircuit
+      new_chip['devices']['dev' + n_dev] = {
+        type: "Subcircuit",
+        label: subcircuit_type + '_' + count(subcircuit_type),
+        celltype: subcircuit_type,
+      }
+      new_chip['subcircuits'] = subcircuitfy(to_add, subcircuit_type)
     }
-    new_chip['subcircuits'] = subcircuitfy(to_add, subcircuit_type)
   } else {
-    new_chip['devices']['dev' + n] = to_add
+    new_chip['devices']['dev' + n_dev] = to_add
   }
   load(new_chip)
 }
@@ -483,6 +313,53 @@ function subcircuitfy(subcircuit, subcircuit_type) {
   return to_return
 }
 
+function load(chip_to_load, reload=true) {
+  console.log('LOAD')
+  console.log(chip_to_load)
+  chip = chip_to_load
+
+  // This happens when loading a component into the canvas not as blackbox but showing internals
+  if (chip_to_load['devices']==null) {
+    var component = chip_to_load
+    chip = get_empty_chip()
+    chip['devices']['dev0'] = component
+  }
+
+  // Reinstantiate circuit
+  if (circuit) circuit.stop()
+  if (monitorview) monitorview.shutdown()
+  if (iopanel) iopanel.shutdown()
+  delete(paper)
+  delete(monitor)
+  circuit = new digitaljs.Circuit(chip);
+  monitor = new digitaljs.Monitor(circuit);
+  monitorview = new digitaljs.MonitorView({model: monitor, el: $('#monitor') });
+  iopanel = new digitaljs.IOPanelView({model: circuit, el: $('#iopanel') });
+  paper = circuit.displayOn($('#paper'));
+
+  // Reinstate simulation
+  if (document.getElementById('toggle_simulation').innerHTML=='Play') {
+    circuit.stop();
+  } else {
+    circuit.start();
+  }
+  monitorview.live = true
+  monitor.on('add', () => {
+    console.log('Wire added to monitor.')
+    // TODO: REFRESH THE SIGNAL MONITOR
+    monitorview._drawAll();
+  });
+  monitorview.on('change', () => {monitorview._drawAll();})
+  document.getElementById('paper').setAttribute('pointer-events', 'all')
+  document.getElementById('paper').setAttribute('pointer-events', 'painted')
+
+  // Reload
+  if (reload) {
+    update_url_or_cookie()
+    location.reload()
+  }
+}
+
 //#endregion
 
 //#region LESSON FUNCTIONS
@@ -490,24 +367,8 @@ function subcircuitfy(subcircuit, subcircuit_type) {
 //#endregion
 
 // DEBUG FUNCTION (utility)
-document.getElementById('debug').style.visibility = 'hidden'
+// document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
-  chip.devices.dev1 = {
-    type: "Memory",
-    label: "memory_"+count('Memory'),
-    bits: 16,   // Word Width
-    abits: 4,  // Address Bits
-    words: 16,  // Number of Words
-    offset: 0,
-    position: {
-      x:0,
-      y:0
-    },
-    rdports: [{transparent: true}],
-    wrports: [{clock_polarity: true}],
-    memdata: [16, '0000000000000000']
-  }
-  console.log(chip.devices.dev1.memdata)
-  load(chip)
+  read_remote_file("https://raw.githubusercontent.com/tilk/digitaljs/master/examples/arithconst.json")
 }

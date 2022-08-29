@@ -30,6 +30,7 @@
             <label for="components_label">Choose a component</label>
             <select name="components" id="components">
                 <option value="saved_circuit">Saved Circuit</option>
+                <option value="huge_circuit">Huge Circuit</option>
                 <optgroup label="I/O Components">
                     <option value="in">Input Button</option>
                     <option value="out">Output Lamp</option>
@@ -65,6 +66,10 @@
                     <option value="ge">Greater or Equal (not implemented)</option>
                     <option value="neg">Negation (not implemented)</option>
                     <option value="una">Unary Plus (not implemented)</option>
+                </optgroup>
+                <optgroup label="Cores">
+                    <option value="singlecycle">Single Cycle (Core only)</option>
+                    <option value="pipeline">Pipeline (Core only)</option>
                 </optgroup>
             </select>
             <div id='additional_settings' style='display: inline-block;'></div>
@@ -102,12 +107,13 @@
         <button id="left">Move Left</button>
         <button id="right">Move Right</button>
         <div style="height:500px; width:100%; pointer-events:painted;"><div id="monitor"></div></div>
-        <!-- <div id="iopanel">
-        </div> -->
+        <div id="iopanel">
+        </div>
 
     <script src="lz-string_backup.js"></script>
     <!-- <script src="https://tilk.github.io/digitaljs/main.js"></script> -->
     <script src="digitaljs_webpack_backup.js"></script>
+    <script src="chips.js"></script>
     <script src="index.js"></script>
 
 
