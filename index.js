@@ -148,6 +148,8 @@ function display_additional_settings() {
     case 'nand': add_bits_option(); break;
     case 'nor': add_bits_option(); break;
     case 'dff': add_bits_option(); break;
+    case 'group': add_bits_option(); break;
+    case 'ungroup': add_bits_option(); break;
     case 'memory': add_memory_options(); break;
     default: break;
   }
@@ -190,6 +192,8 @@ function selected_chip(callback) {
     case "memory": callback(get_memory_chip()); break;
     case "saved_circuit": saved_chip(callback); break;
     case "huge_circuit": huge_chip(callback); break;
+    case "group": callback(get_group_chip()); break;
+    case "ungroup": callback(get_ungroup_chip()); break;
     case "singlecycle": singlecycle_chip(callback); break;
     case "pipeline": pipelined_chip(callback); break;
     default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
@@ -380,5 +384,7 @@ function load(chip_to_load, reload=true) {
 document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
-  read_remote_file("https://raw.githubusercontent.com/tilk/digitaljs/master/examples/arithconst.json")
+  chip = get_empty_chip()
+  chip.devices.dev1 = get_bus_ungroup()
+  load(chip)
 }

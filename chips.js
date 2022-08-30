@@ -94,6 +94,26 @@ return {
 }
 }
 
+function get_group_chip() {
+    var width = parseInt(document.getElementById('bits').value)
+    var groups = Array(width).fill(1);
+    return {
+      type: "BusGroup",
+      label: "busgroup_"+count('BusGroup'),
+      groups: groups,
+  }
+}
+
+function get_ungroup_chip() {
+    var width = parseInt(document.getElementById('bits').value)
+    var groups = Array(width).fill(1);
+    return {
+      type: "BusUngroup",
+      label: "busungroup_"+count('BusUngroup'),
+      groups: groups,
+    }
+  }
+
 function get_nor_chip() {
 return {
     type: "Nor",
