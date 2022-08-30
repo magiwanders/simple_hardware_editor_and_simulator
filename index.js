@@ -44,7 +44,8 @@ function reset() {
 
 function reload() {
   console.log('Canvas reloaded')
-  load(circuit.toJSON())
+  load(circuit.toJSON(), false)
+  location.reload()
 }
 
 function save() {
@@ -105,6 +106,7 @@ document.getElementById('remove').onclick = remove_chip
 document.getElementById('rename').onclick = rename_chip
 document.getElementById('toggle_simulation').onclick = toggle_simulation
 document.getElementById('step').onclick = step
+// document.getElementById('clock').onclick = clock
 // Handlers for zoom of signal monitors
 document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2; }
 document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2;}
@@ -205,8 +207,12 @@ function toggle_simulation() {
 }
 
 function step() {
-  circuit.updateGates();
+  circuit.updateGates()
 }
+
+// function clock() {
+//   circuit.updateGatesNext()
+// }
 
 function remove_chip() {
   var new_chip = circuit.toJSON()
@@ -326,6 +332,10 @@ function load(chip_to_load, reload=true) {
   }
 
   // Reinstantiate circuit
+  // var old_paper = document.getElementById("paper") // This solution theoretically solves the problem of reloading but not that of monitors halting
+  // var new_paper = document.createElement("div");
+  // new_paper.id = "paper"
+  // old_paper.replaceWith(new_paper)
   if (circuit) circuit.stop()
   if (monitorview) monitorview.shutdown()
   if (iopanel) iopanel.shutdown()
@@ -367,7 +377,7 @@ function load(chip_to_load, reload=true) {
 //#endregion
 
 // DEBUG FUNCTION (utility)
-// document.getElementById('debug').style.visibility = 'hidden'
+document.getElementById('debug').style.visibility = 'hidden'
 document.getElementById('debug').onclick = debug
 function debug() {
   read_remote_file("https://raw.githubusercontent.com/tilk/digitaljs/master/examples/arithconst.json")
