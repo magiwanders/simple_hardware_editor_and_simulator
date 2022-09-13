@@ -4,19 +4,17 @@ var url, chip, circuit, monitor, monitorview, iopanel, paper;
 document.addEventListener('DOMContentLoaded', () => {
   console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
   url = new URLSearchParams(window.location.search)
-  if(localStorage.getItem('huge')=='true') {
-    load(JSON.parse(LZString.decompressFromBase64(localStorage.getItem('chip'))), false)
+  saved_chip_state = localStorage.getItem('chip')
+  // Check if the URL actually contains some chip to load, if not load empty chip
+  if (saved_chip_state==null || saved_chip_state=='') {
+    load(get_empty_chip(), false)
   } else {
-     // Check if the URL actually contains some chip to load, if not load empty chip
-    if (LZString.decompressFromBase64(url.get('chip'))==null || LZString.decompressFromBase64(url.get('chip'))=='') {
-      load(get_empty_chip(), false)
-    } else {
-      load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
-    } 
-  }
+    load(JSON.parse(LZString.decompressFromBase64(saved_chip_state)), false)
+  } 
   document.getElementById('components').value = url.get('select')
   display_additional_settings()
-  update_url_or_cookie() 
+  if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='') document.getElementById('bits').value = url.get('bits')
+  save_state() 
   // setInterval(update_url, 5000);
   window.onbeforeunload = shutdown
 })
@@ -26,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('reset').onclick = reset
 document.getElementById('reload').onclick = reload
-document.getElementById('save').onclick = save
+document.getElementById('save').onclick = save_circuit
 document.getElementById('share').onclick = share
 
 function shutdown() {
-  update_url_or_cookie()
+  save_state()
   monitorview.shutdown()
   iopanel.shutdown()
   circuit.stop()
@@ -48,7 +46,7 @@ function reload() {
   location.reload()
 }
 
-function save() {
+function save_circuit() {
   var filename = 'chip.json'
   var textInput = JSON.stringify(circuit.toJSON())
   var element = document.createElement('a');
@@ -60,28 +58,16 @@ function save() {
 
 function share() {
   var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
-  document.getElementById('share').innerHTML = 'Copied to clipboard ✓'
-  if (compressed_circuit.length > 30000) {
-    navigator.clipboard.writeText(compressed_circuit);
-    alert('Circuit too big to be shared by URL. The circuit has been copied to the clipboard anyway, get it back into SHEAS using the "Huge Circuit" option in the components dropdown WHILE HOLDING THE CHIP IN THE CLIPBOARD!')
-  } else {
-    update_url_or_cookie()
-    navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
-  }
-  setTimeout(() => {document.getElementById('share').innerHTML = 'Share'}, 1000);
+  document.getElementById('share').innerHTML = 'Copied to clipboard ✓. Load in another SHEAS window with the "Circuit in Clipboard" option.'
+  navigator.clipboard.writeText(compressed_circuit);
+  setTimeout(() => {document.getElementById('share').innerHTML = 'Share'}, 3000);
 }
 
-function update_url_or_cookie() {
+function save_state() {
   var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
-  if (compressed_circuit.length > 30000) {
-    // alert('Chip is to big to be saved in the url. It will be saved as a cookie.')
-    localStorage.setItem("huge", 'true');
-    localStorage.setItem("chip", compressed_circuit);
-  } else {
-    localStorage.setItem("huge", 'false');
-    set_url('chip', compressed_circuit) 
-  }
+  localStorage.setItem("chip", compressed_circuit);
   set_url('select', document.getElementById('components').value)
+  if (document.getElementById('bits')) set_url('bits', document.getElementById('bits').value)
 }
 
 function set_url(label, new_value) {
@@ -171,7 +157,7 @@ function add_memory_options() {
   mem_bits.setAttribute("type", "number");
   mem_bits.min = 1
   mem_bits.max = 64
-  mem_bits.id = 'mem_bits'
+  mem_bits.id = 'bits'
   document.getElementById('additional_settings').appendChild(mem_bits)
   document.getElementById('additional_settings').innerHTML = 'that is addressed with ' + document.getElementById('additional_settings').innerHTML + ' bits '
   document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
@@ -369,7 +355,7 @@ function load(chip_to_load, reload=true) {
 
   // Reload
   if (reload) {
-    update_url_or_cookie()
+    save_state()
     location.reload()
   }
 }

@@ -137,7 +137,7 @@ return {
 }
 
 function get_memory_chip() {
-var mem_bits = parseInt(document.getElementById('mem_bits').value)
+var mem_bits = parseInt(document.getElementById('bits').value)
 var mem_length = parseInt(Math.pow(2, mem_bits))
 return {
     type: "Memory",
