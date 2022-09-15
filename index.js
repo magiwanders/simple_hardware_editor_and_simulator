@@ -66,7 +66,7 @@ function share_chip() {
   var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
   document.getElementById('share_chip').innerHTML = 'Copied to clipboard ✓. Load in another SHEAS window with the "Circuit in Clipboard" option.'
   navigator.clipboard.writeText(compressed_circuit);
-  setTimeout(() => {document.getElementById('share_chip').innerHTML = 'Share'}, 3000);
+  setTimeout(() => {document.getElementById('share_chip').innerHTML = 'Share the chip'}, 3000);
 }
 
 function share_link() {
@@ -80,7 +80,7 @@ function share_link() {
     navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
     url.set('chip', '')
   }
-  setTimeout(() => {document.getElementById('share_link').innerHTML = 'Share'}, 3000);
+  setTimeout(() => {document.getElementById('share_link').innerHTML = 'Share as link'}, 3000);
 }
 
 function save_state() {
