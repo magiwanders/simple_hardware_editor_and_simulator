@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   } else {
     load(JSON.parse(LZString.decompressFromBase64(url.get('chip'))), false)
+    set_url('chip', '')
   } 
   document.getElementById('components').value = url.get('select')
   display_additional_settings()
