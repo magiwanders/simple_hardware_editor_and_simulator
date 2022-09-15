@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('reset').onclick = reset
 document.getElementById('reload').onclick = reload
 document.getElementById('save').onclick = save_circuit
-document.getElementById('share').onclick = share
+document.getElementById('share_chip').onclick = share_chip
+document.getElementById('share_link').onclick = share_link
 
 function shutdown() {
   save_state()
@@ -60,11 +61,23 @@ function save_circuit() {
   element.click();
 }
 
-function share() {
+function share_chip() {
   var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
-  document.getElementById('share').innerHTML = 'Copied to clipboard ✓. Load in another SHEAS window with the "Circuit in Clipboard" option.'
+  document.getElementById('share_chip').innerHTML = 'Copied to clipboard ✓. Load in another SHEAS window with the "Circuit in Clipboard" option.'
   navigator.clipboard.writeText(compressed_circuit);
-  setTimeout(() => {document.getElementById('share').innerHTML = 'Share'}, 3000);
+  setTimeout(() => {document.getElementById('share_chip').innerHTML = 'Share'}, 3000);
+}
+
+function share_link() {
+  var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
+  document.getElementById('share_link').innerHTML = 'Copied to clipboard ✓. Paste in another browser window.'
+  if (compressed_circuit.length > 30000) {
+    alert('Circuit too big to be shared by URL. Use the "Share the chip" button and load it in another SHEAS window with the "Circuit in Clipboard" option, while still holding the chip in the clipboard.')
+  } else {
+    save_state()
+    navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url.toString());
+  }
+  setTimeout(() => {document.getElementById('share_link').innerHTML = 'Share'}, 3000);
 }
 
 function save_state() {
