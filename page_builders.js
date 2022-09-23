@@ -1,3 +1,14 @@
+const version = 'v1.1'
+
+function Title() {
+    return _div({id:'title'}, 
+        [
+            _h1({style: 'display: inline-block;'}, 'Simple Hardware Editor And Simulator'),
+            version
+        ]
+    )
+}
+
 function AddOrLoadRow() {
     return _div({id: 'add_or_load_line'},
         [
@@ -187,6 +198,7 @@ function BuildSHEAS(sheas_container) {
     window.onbeforeunload = shutdown
     sheas_container.appendChild( _div({id: 'sheas'},
         [
+            Title(),
             AddOrLoadRow(),
             RemoveRow(),
             RenameRow(),
@@ -198,4 +210,19 @@ function BuildSHEAS(sheas_container) {
             TesterDiv()
         ]
     ))
+    sheas_container.style['background-color'] = 'white'
+}
+
+function BuildEmbeddedSHEAS(sheas_container) {
+    window.onbeforeunload = shutdown
+    sheas_container.appendChild( _div({id: 'sheas'},
+        [
+            Paper(),
+            SimulationControls(),
+            MonitorOrTesterControls(),
+            MonitorDiv(),
+            TesterDiv()
+        ]
+    ))
+    sheas_container.style['background-color'] = 'white'
 }
