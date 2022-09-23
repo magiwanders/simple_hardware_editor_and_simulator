@@ -213,7 +213,7 @@ function BuildSHEAS(sheas_container) {
     sheas_container.style['background-color'] = 'white'
 }
 
-function BuildEmbeddedSHEAS(sheas_container) {
+function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
     window.onbeforeunload = shutdown
     sheas_container.appendChild( _div({id: 'sheas'},
         [
@@ -225,4 +225,5 @@ function BuildEmbeddedSHEAS(sheas_container) {
         ]
     ))
     sheas_container.style['background-color'] = 'white'
+    load(LZString.decompressFromBase64(compressed_chip))
 }
