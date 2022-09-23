@@ -197,6 +197,7 @@ function TesterDiv() {
 
 function BuildSHEAS(sheas_container) {
     window.onbeforeunload = shutdown
+    sheas_container.innerHTML = ''
     sheas_container.appendChild( _div({id: 'sheas'},
         [
             Title(),
