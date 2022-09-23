@@ -122,7 +122,7 @@ function VisualizationControls() {
 }
 
 function Paper() {
-    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted; background-color: white;'}, _div({id: 'paper'}) )
+    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted;style:'}, _div({id: 'paper'}) )
 }
 
 function SimulationControls() {
@@ -159,7 +159,7 @@ function MonitorControls() {
 }
 
 function Monitor() {
-    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor'}))
+    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor''}))
 }
 
 function MonitorDiv() {
@@ -224,7 +224,7 @@ function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
             TesterDiv()
         ]
     ))
-    // sheas_container.style['background-color'] = 'white'
-    // sheas_container.style['border-style'] = 'solid'
+    sheas_container.style['background-color'] = 'white'
+    sheas_container.style['color'] = 'black'
     load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
 }
