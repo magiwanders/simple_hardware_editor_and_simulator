@@ -1,7 +1,7 @@
 const version = 'v1.1'
 
 function Title() {
-    return _div({id:'title'}, 
+    return _div({id:'title'},
         [
             _h1({style: 'display: inline-block;'}, 'Simple Hardware Editor And Simulator'),
             version
@@ -15,7 +15,7 @@ function AddOrLoadRow() {
             _label({for: 'components'}, 'Choose a component'),
             _select({id: 'components', name: 'components', onchange: 'display_additional_settings()'},
                 [
-                    _option({value: 'saved_circuit'},'Saved Circuit'),                    
+                    _option({value: 'saved_circuit'},'Saved Circuit'),
                     _option({value: 'clipboard_circuit'},'Circuit from Clipboard'),
                     _optgroup({label: 'I/O Components'},
                         [
@@ -65,16 +65,16 @@ function AddOrLoadRow() {
                     ),
                     _optgroup({label: 'Buses'},
                         [
-                            _option({value: 'group'},'Bus Group'), 
+                            _option({value: 'group'},'Bus Group'),
                             _option({value: 'ungroup'},'Bus Ungroup')
                         ]
                     ),
                     _optgroup({label: 'Cores'},
                         [
-                            _option({value: 'single_cycle'},'Single Cycle (Core only)'), 
-                            _option({value: 'pipeline'},'Pipeline (Core only)') 
+                            _option({value: 'single_cycle'},'Single Cycle (Core only)'),
+                            _option({value: 'pipeline'},'Pipeline (Core only)')
                         ]
-                    )                    
+                    )
                 ]
             ),
             _div({id: 'additional_settings', style: 'display: inline-block;'}),
@@ -91,7 +91,7 @@ function RemoveRow() {
     return _div({id: 'remove_line'},
         [
             _input({type: 'text', name: 'to_remove', id: 'to_remove', placeholder: 'Name the Component'},),
-            'to', 
+            'to',
             _button({id: 'remove', onclick: 'remove_chip()'},'Remove')
         ]
     )
@@ -139,7 +139,7 @@ function MonitorOrTesterControls() {
     return _div({id: 'monitor_or_tester_controls'},
         [
             _button({id: 'show_monitor', onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
-            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab') 
+            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab')
         ]
     )
 }
@@ -175,7 +175,7 @@ function TesterControls() {
     return _div({id: 'tester_controls'},
         [
             _h3({id: 'tester_title'}, 'Tester'),
-            '(this is the digitaljs IOPanel, it will be substituted by a more advanced tester.)', 
+            '(this is the digitaljs IOPanel, it will be substituted by a more advanced tester.)',
             _br(), _br()
         ]
     )
@@ -225,5 +225,5 @@ function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
         ]
     ))
     sheas_container.style['background-color'] = 'white'
-    load(LZString.decompressFromBase64(compressed_chip))
+    load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
 }
