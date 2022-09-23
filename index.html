@@ -18,30 +18,35 @@
 <body>
 
     <div id="sheas_container">
-        <div class="loader"></div>
+        <div style="width:100%; height:100%" cla><div class="loader"></div></div>
     </div>
 
     <style media="screen">
-    .loader {
-border: 4px solid #f3f3f3;
-border-radius: 50%;
-border-top: 4px solid #3498db;
-width: 20px;
-height: 20px;
--webkit-animation: spin 0.75s linear infinite; /* Safari */
-animation: spin 0.75s linear infinite;
-}
+        .loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            border-top: 4px solid #727272;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 0.75s linear infinite; /* Safari */
+            animation: spin 0.75s linear infinite;
+        }
 
-/* Safari */
-@-webkit-keyframes spin {
-0% { -webkit-transform: rotate(0deg); }
-100% { -webkit-transform: rotate(360deg); }
-}
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
 
-@keyframes spin {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
-}
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 
 </body>
