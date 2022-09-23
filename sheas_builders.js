@@ -159,7 +159,7 @@ function MonitorControls() {
 }
 
 function Monitor() {
-    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor''}))
+    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor'}))
 }
 
 function MonitorDiv() {
