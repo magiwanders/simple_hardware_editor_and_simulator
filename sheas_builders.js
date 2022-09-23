@@ -224,7 +224,7 @@ function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
             TesterDiv()
         ]
     ))
-    sheas_container.style['background-color'] = 'white'
-    sheas_container.style['border-style'] = 'solid'
+    // sheas_container.style['background-color'] = 'white'
+    // sheas_container.style['border-style'] = 'solid'
     load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
 }
