@@ -144,10 +144,10 @@ function MonitorOrTesterControls() {
     )
 }
 
-function MonitorControls() {
+function MonitorControls(title=true) {
     return _div({id: 'monitor_controls'},
         [
-            _h3({id: 'monitor_title'}, 'Monitor'),
+            title ? _h3({id: 'monitor_title'}, 'Monitor') : _div(),
             'Click on the blue looking glass that pops up hovering wires to track them below.',
             _br(), 'Monitor',
             _button({id: 'zoom_in', onclick: 'zoom_in()'}, 'Zoom In'),
@@ -219,7 +219,7 @@ function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
         [
             Paper(),
             SimulationControls(),
-            MonitorDiv(),
+            MonitorDiv(false),
         ]
     ))
     sheas_container.style['background-color'] = 'white'
