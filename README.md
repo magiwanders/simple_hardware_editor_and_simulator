@@ -4,7 +4,7 @@ A prototype of a simple purely graphical hardware editor and simulator for educa
 
 ### Live Web Page Available [Here](https://sheas.magiwanders.com)
 
-![screenshot](./docs/screenshot.png)
+![screenshot](./screenshots/global_screenshot.png)
 
 ### Documentation
 See the [getting started tutorial](docs/getting_started.md)
