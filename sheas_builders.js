@@ -122,7 +122,7 @@ function VisualizationControls() {
 }
 
 function Paper() {
-    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted;style:'}, _div({id: 'paper'}) )
+    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted; scrollbar-color: white'}, _div({id: 'paper'}) )
 }
 
 function SimulationControls() {
