@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Build the page
   BuildSHEAS(document.getElementById('sheas_container'))
 
-  // Bind elements and events
-  BindEvents()
-
   // Setup the page reading local memory and URL
   setup()
 
@@ -57,7 +54,7 @@ function reload() {
   location.reload()
 }
 
-function save_circuit() {
+function save() {
   var filename = 'chip.json'
   var textInput = JSON.stringify(circuit.toJSON())
   var element = document.createElement('a');
@@ -174,6 +171,29 @@ function add_memory_options() {
   document.getElementById('additional_settings').innerHTML = 'that is addressed with ' + document.getElementById('additional_settings').innerHTML + ' bits '
   document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
 }
+
+function monitor_or_tester(which) {
+  document.getElementById('monitor_div').style.display = which=='monitor' ? 'block' : 'none'; 
+  document.getElementById('tester_div').style.display = which=='tester' ? 'block' : 'none';
+}
+
+function zoom_in() {
+  monitorview.pixelsPerTick *= 2;
+}
+
+function zoom_out() {
+  monitorview.pixelsPerTick /= 2;
+}
+
+function move_left() {
+  monitorview.start -= monitorview._width / monitorview.pixelsPerTick / 4;
+}
+
+function move_right() {
+  monitorview.start += monitorview._width / monitorview.pixelsPerTick / 4;
+}
+
+
 
 // Retrieves the chip selected in the curtain input by the user to <callback>.
 // <callback> can be either add to or load into the simulation

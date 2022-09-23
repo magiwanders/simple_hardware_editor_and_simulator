@@ -1,152 +1,191 @@
 function AddOrLoadRow() {
-    return Div({id: 'add_or_load_line'},
+    return _div({id: 'add_or_load_line'},
         [
-            Label({for: 'components'}, 'Choose a component'),
-            Select({id: 'components', name: 'components'},
+            _label({for: 'components'}, 'Choose a component'),
+            _select({id: 'components', name: 'components', onchange: 'display_additional_settings()'},
                 [
-                    Option({value: 'saved_circuit'},'Saved Circuit'),                    
-                    Option({value: 'clipboard_circuit'},'Circuit from Clipboard'),
-                    Optgroup({label: 'I/O Components'},
+                    _option({value: 'saved_circuit'},'Saved Circuit'),                    
+                    _option({value: 'clipboard_circuit'},'Circuit from Clipboard'),
+                    _optgroup({label: 'I/O Components'},
                         [
-                            Option({value: 'in'},'Input Button'),
-                            Option({value: 'out'},'Output Lamp'),
-                            Option({value: 'clock'},'Clock'),
-                            Option({value: 'constant'},'Constant (not implemented)'),
-                            Option({value: '7segment'},'7 Segment Display (not implemented)')
+                            _option({value: 'in'},'Input Button'),
+                            _option({value: 'out'},'Output Lamp'),
+                            _option({value: 'clock'},'Clock'),
+                            _option({value: 'constant'},'Constant (not implemented)'),
+                            _option({value: '7segment'},'7 Segment Display (not implemented)')
                         ]
                     ),
-                    Optgroup({label: 'Universal Gates'},
+                    _optgroup({label: 'Universal Gates'},
                         [
-                            Option({value: 'nand'},'Nand'),
-                            Option({value: 'nor'},'Nor')
+                            _option({value: 'nand'},'Nand'),
+                            _option({value: 'nor'},'Nor')
                         ]
                     ),
-                    Optgroup({label: 'Basic Combinatorial Gates'},
+                    _optgroup({label: 'Basic Combinatorial Gates'},
                         [
-                            Option({value: 'not'},'Not (not implemented)'),
-                            Option({value: 'and'},'And (not implemented)'),
-                            Option({value: 'or'},'Or (not implemented)')
+                            _option({value: 'not'},'Not (not implemented)'),
+                            _option({value: 'and'},'And (not implemented)'),
+                            _option({value: 'or'},'Or (not implemented)')
                         ]
                     ),
-                    Optgroup({label: 'Sequential Circuits'},
+                    _optgroup({label: 'Sequential Circuits'},
                         [
-                            Option({value: 'd_latch'},'D-Latch (not implemented)'),
-                            Option({value: 'dff'},'Register (D-Flip-Flop)'),
-                            Option({value: 'memory'},'Memory')
+                            _option({value: 'd_latch'},'D-Latch (not implemented)'),
+                            _option({value: 'dff'},'Register (D-Flip-Flop)'),
+                            _option({value: 'memory'},'Memory')
                         ]
                     ),
-                    Optgroup({label: 'Other Combinatorial Gates'},
+                    _optgroup({label: 'Other Combinatorial Gates'},
                         [
-                            Option({value: 'repeater'},'Repeater (not implemented)'),
-                            Option({value: 'nor'},'Nor (not implemented)'),
-                            Option({value: 'xor'},'Xor (not implemented)'),
-                            Option({value: 'shiftL'},'Shift Left (not implemented)'),
-                            Option({value: 'shiftR'},'Shift Right (not implemented)'),
-                            Option({value: 'eq'},'Equal (not implemented)'),
-                            Option({value: 'ne'},'Not Equal (not implemented)'),
-                            Option({value: 'lt'},'Less Than (not implemented)'),
-                            Option({value: 'le'},'Less or Equal (not implemented)'),
-                            Option({value: 'gt'},'Greater Than (not implemented)'),
-                            Option({value: 'ge'},'Greater or Equal (not implemented)'),
-                            Option({value: 'neg'},'Negation (not implemented)'),
-                            Option({value: 'una'},'Unary Plus (not implemented)')
+                            _option({value: 'repeater'},'Repeater (not implemented)'),
+                            _option({value: 'nor'},'Nor (not implemented)'),
+                            _option({value: 'xor'},'Xor (not implemented)'),
+                            _option({value: 'shiftL'},'Shift Left (not implemented)'),
+                            _option({value: 'shiftR'},'Shift Right (not implemented)'),
+                            _option({value: 'eq'},'Equal (not implemented)'),
+                            _option({value: 'ne'},'Not Equal (not implemented)'),
+                            _option({value: 'lt'},'Less Than (not implemented)'),
+                            _option({value: 'le'},'Less or Equal (not implemented)'),
+                            _option({value: 'gt'},'Greater Than (not implemented)'),
+                            _option({value: 'ge'},'Greater or Equal (not implemented)'),
+                            _option({value: 'neg'},'Negation (not implemented)'),
+                            _option({value: 'una'},'Unary Plus (not implemented)')
                         ]
                     ),
-                    Optgroup({label: 'Buses'},
+                    _optgroup({label: 'Buses'},
                         [
-                            Option({value: 'group'},'Bus Group'), 
-                            Option({value: 'ungroup'},'Bus Ungroup')
+                            _option({value: 'group'},'Bus Group'), 
+                            _option({value: 'ungroup'},'Bus Ungroup')
                         ]
                     ),
-                    Optgroup({label: 'Cores'},
+                    _optgroup({label: 'Cores'},
                         [
-                            Option({value: 'single_cycle'},'Single Cycle (Core only)'), 
-                            Option({value: 'pipeline'},'Pipeline (Core only)') 
+                            _option({value: 'single_cycle'},'Single Cycle (Core only)'), 
+                            _option({value: 'pipeline'},'Pipeline (Core only)') 
                         ]
                     )                    
                 ]
             ),
-            Div({id: 'additional_settings', style: 'display: inline-block;'}),
+            _div({id: 'additional_settings', style: 'display: inline-block;'}),
             'and',
-            Button({id: 'add'},'Add'),
+            _button({id: 'add', onclick: 'selected_chip(add)'},'Add'),
             'it to the visualization or',
-            Button({id: 'load'},'Load'),
+            _button({id: 'load', onclick: 'selected_chip(load)'},'Load'),
             'it ex novo.'
         ]
     )
 }
 
 function RemoveRow() {
-    return Div({id: 'remove_line'},
+    return _div({id: 'remove_line'},
         [
-            Input({type: 'text', name: 'to_remove', id: 'to_remove', placeholder: 'Name the Component'},),
+            _input({type: 'text', name: 'to_remove', id: 'to_remove', placeholder: 'Name the Component'},),
             'to', 
-            Button({id: 'remove'},'Remove')
+            _button({id: 'remove', onclick: 'remove_chip()'},'Remove')
         ]
     )
 }
 
 function RenameRow() {
-    return Div({id: 'rename_line'},
+    return _div({id: 'rename_line'},
         [
-            Button({id: 'rename'},'Rename'),
-            Input({type: 'text', name: 'to_rename', id: 'to_rename', placeholder: 'Component to Rename'},),
+            _button({id: 'rename', onclick: 'rename_chip()'},'Rename'),
+            _input({type: 'text', name: 'to_rename', id: 'to_rename', placeholder: 'Component to Rename'},),
             'to',
-            Input({type: 'text', name: 'new_rename', id: 'new_name', placeholder: 'New Name'},),
+            _input({type: 'text', name: 'new_rename', id: 'new_name', placeholder: 'New Name'},),
         ]
     )
 }
 
 function VisualizationControls() {
-    return Div({id: 'visualization_controls'},
+    return _div({id: 'visualization_controls'},
         [
-            Button({id: 'reload'}, 'Reload'), ',',
-            Button({id: 'reset'}, 'Reset'), ',',
-            Button({id: 'save'}, 'Save'), ',',
-            Button({id: 'share_chip'}, 'Share only the chip'), 'or',
-            Button({id: 'share_link'}, 'Share circuit as link'), '.',
-            Button({id: 'debug', style: 'visibility: hidden;'}, 'Debug'),
+            _button({id: 'reload', onclick: 'reload()'}, 'Reload'), ',',
+            _button({id: 'reset', onclick: 'reset()'}, 'Reset'), ',',
+            _button({id: 'save', onclick: 'save()'}, 'Save'), ',',
+            _button({id: 'share_chip', onclick: 'share_chip()'}, 'Share only the chip'), 'or',
+            _button({id: 'share_link', onclick: 'share_link()'}, 'Share circuit as link'), '.',
+            _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug'),
         ]
     )
 }
 
 function Paper() {
-    return Div( {style: 'height:500px; width:100%; overflow: scroll; border-style: inset; pointer-events:painted;'}, Div({id: 'paper'}) )
+    return _div( {style: 'height:500px; width:100%; overflow: scroll; border-style: inset; pointer-events:painted;'}, _div({id: 'paper'}) )
 }
 
 function SimulationControls() {
- return Div({id: 'simulation_controls'},
+ return _div({id: 'simulation_controls'},
     [
-        Button({id: 'toggle_simulation'}, 'Pause'), 'or',
-        Button({id: 'step'}, 'Step'), ' the simulation',
-        Br(), Br()
+        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or',
+        _button({id: 'step', onclick: 'step()'}, 'Step'), ' the simulation',
+        _br(), _br()
     ]
  )
 }
 
-function MonitorControls() {
-    return Div({id: 'monitor_controls'},
+function MonitorOrTesterControls() {
+    return _div({id: 'monitor_or_tester_controls'},
         [
+            _button({id: 'show_monitor', onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
+            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab') 
+        ]
+    )
+}
+
+function MonitorControls() {
+    return _div({id: 'monitor_controls'},
+        [
+            _h3({id: 'monitor_title'}, 'Monitor'),
             'Click on the blue looking glass that pops up hovering wires to track them below.',
-            Br(), 'Monitor',
-            Button({id: 'ppt_up'}, 'Zoom In'),
-            Button({id: 'ppt_down'}, 'Zoom Out'),
-            Button({id: 'left'}, 'Move Left'),
-            Button({id: 'right'}, 'Move Right'),
+            _br(), 'Monitor',
+            _button({id: 'zoom_in', onclick: 'zoom_in()'}, 'Zoom In'),
+            _button({id: 'zoom_out', onclick: 'zoom_out()'}, 'Zoom Out'),
+            _button({id: 'move_left', onclick: 'move_left()'}, 'Move Left'),
+            _button({id: 'move_right', onclick: 'move_right()'}, 'Move Right'),
         ]
     )
 }
 
 function Monitor() {
-    return Div({style: 'height:500px; width:100%; pointer-events:painted;'},Div({id: 'monitor'}))
+    return _div({style: 'height:500px; width:100%; pointer-events:painted;'},_div({id: 'monitor'}))
 }
 
-function IOPanel() {
-    return Div({id: 'iopanel'})
+function MonitorDiv() {
+    return _div({id: 'monitor_div', style: 'display: block;'},
+        [
+            MonitorControls(),
+            Monitor(),
+        ]
+    )
+}
+
+function TesterControls() {
+    return _div({id: 'tester_controls'},
+        [
+            _h3({id: 'tester_title'}, 'Tester'),
+            '(this is the digitaljs IOPanel, it will be substituted by a more advanced tester.)', 
+            _br(), _br()
+        ]
+    )
+}
+
+function Tester() {
+    return _div({id: 'iopanel'})
+}
+
+function TesterDiv() {
+    return _div({id: 'tester_div', style: 'display: none;'},
+            [
+                TesterControls(),
+                Tester()
+            ]
+    )
 }
 
 function BuildSHEAS(sheas_container) {
-    sheas_container.appendChild( Div({id: 'sheas'},
+    window.onbeforeunload = shutdown
+    sheas_container.appendChild( _div({id: 'sheas'},
         [
             AddOrLoadRow(),
             RemoveRow(),
@@ -154,9 +193,9 @@ function BuildSHEAS(sheas_container) {
             VisualizationControls(),
             Paper(),
             SimulationControls(),
-            MonitorControls(),
-            Monitor(),
-            IOPanel()
+            MonitorOrTesterControls(),
+            MonitorDiv(),
+            TesterDiv()
         ]
     ))
 }
