@@ -220,7 +220,8 @@ function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
         [
             Paper(),
             SimulationControls(),
-            MonitorDiv(false),
+            MonitorControls(false),
+            Monitor()
         ]
     ))
     sheas_container.style['background-color'] = 'white'
