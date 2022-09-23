@@ -185,12 +185,12 @@ function saved_chip(callback) {
     input.click();
   }
   
-  function huge_chip(callback) {
+function clipboard_chip(callback) {
     navigator.clipboard.readText()
-    .then(content => {
-      callback(JSON.parse(LZString.decompressFromBase64(content)),  is_subcircuit=true, as_component=true)
-    })
-  }
+        .then(content => {
+            callback(JSON.parse(LZString.decompressFromBase64(content)),  is_subcircuit=true, as_component=true)
+        })
+}
 
 function singlecycle_chip(callback) {
     read_remote_file("https://raw.githubusercontent.com/magiwanders/simple_hardware_editor_and_simulator/master/chips/single_cycle.json", callback, 'single_cycle')

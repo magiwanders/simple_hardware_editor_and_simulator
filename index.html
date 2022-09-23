@@ -10,116 +10,16 @@
 <body>
 
     <div ><h1 style="display: inline-block;">Simple Hardware Editor And Simulator</h1>   v1.0</div>
-        <!-- <h3>~60 lines of HTML and ~200 lines of JavaScript</h3> -->
-        <!-- <div>
-            <label for="lessons_label">Choose a lesson</label>
-            <select name="lessons" id="lessons">
-                <option value="hint">Here</option>
-                <optgroup label="Computer Organization">
-                    <option value="single_issue">Single Issue Computer (not implemented)</option>
-                    <option value="pipelining">Pipelining</option>
-                </optgroup>
-                <optgroup label="Computer Architecture <not implemented>">
-                    <option value="dual_issue">Dual Issue (not implemented) </option>
-                </optgroup>
-            </select>
-            to
-            <button id="load_lesson">Load</button>
-        </div> -->
-        <div>
-            <label for="components_label">Choose a component</label>
-            <select name="components" id="components">
-                <option value="saved_circuit">Saved Circuit</option>
-                <option value="huge_circuit">Circuit in Clipboard</option>
-                <optgroup label="I/O Components">
-                    <option value="in">Input Button</option>
-                    <option value="out">Output Lamp</option>
-                    <option value="clock">Clock</option>
-                    <option value="constant">Constant Input (not implemented)</option>
-                    <option value="7segment">7-Segment Display (not implemented)</option>
-                </optgroup>
-                <optgroup label="Universal Gates">
-                    <option value="nand">Nand</option>
-                    <option value="nor">Nor</option>
-                </optgroup>
-                <optgroup label="Basic Combinational Gates">
-                    <option value="not">Not (not implemented)</option>
-                    <option value="and">And (not implemented)</option>
-                    <option value="or">Or (not implemented)</option>
-                </optgroup>
-                <optgroup label="Sequential Circuits">
-                    <option value="d_latch">D-Latch (not implemented)</option>
-                    <option value="dff">Register (D-Flip-Flop) </option>
-                    <option value="memory">Memory</option>
-                </optgroup>
-                <optgroup label="Other Combinational Gates">
-                    <option value="repeater">Repeater (not implemented)</option>
-                    <option value="nor">Nor (not implemented)</option>
-                    <option value="xor">Xor (not implemented)</option>
-                    <option value="shiftL">Shift Left (not implemented)</option>
-                    <option value="shiftR">Shift Right (not implemented)</option>
-                    <option value="eq">Equal (not implemented)</option>
-                    <option value="ne">Not Equal (not implemented)</option>
-                    <option value="lt">Less Than (not implemented)</option>
-                    <option value="le">Less or Equal (not implemented)</option>
-                    <option value="gt">Greater Than (not implemented)</option>
-                    <option value="ge">Greater or Equal (not implemented)</option>
-                    <option value="neg">Negation (not implemented)</option>
-                    <option value="una">Unary Plus (not implemented)</option>
-                </optgroup>
-                <optgroup label="Buses">
-                    <option value="group">Bus Group</option>
-                    <option value="ungroup">Bus Ungroup</option>
-                </optgroup>
-                <optgroup label="Cores">
-                    <option value="singlecycle">Single Cycle (Core only)</option>
-                    <option value="pipeline">Pipeline (Core only)</option>
-                </optgroup>
-            </select>
-            <div id='additional_settings' style='display: inline-block;'></div>
-            and
-            <button id="add">Add</button>
-            it to the visualization or
-            <button id="load">Load</button>
-            it ex novo.
-        </div>
-    
-        <div>
-            <input type="text" name="to_remove" id="to_remove" placeholder="Name the component">
-            to
-            <button id="remove">Remove</button>
-        </div>
-        <div>
-            <button id="rename">Rename</button>
-            <input type="text" name="to_rename" id="to_rename" placeholder="Component to rename">
-            to
-            <input type="text" name="new_name" id="new_name" placeholder="New Name">
-        </div>
-        <button id="reload">Reload</button>,
-        <button id="reset">Reset</button>, 
-        <button id="save">Save</button>, 
-        <button id="share_chip">Share the chip</button> or
-        <button id="share_link">Share as link</button>.
-        <button id="debug">Debug</button>
-        <div style="height:500px; width:100%; overflow: scroll; border-style: inset; pointer-events:painted;"><div id="paper"></div></div>
-        <button id="toggle_simulation">Pause</button>
-        <!-- , <button id="clock">Clock</button> -->
-        or <button id="step">Step</button> the simulation.
-        <br><br>
-        Click on the blue looking glass that pops up hovering wires to track them below.
-        <br>Monitor
-        <button id="ppt_up">Zoom In</button>
-        <button id="ppt_down">Zoom Out</button>
-        <button id="left">Move Left</button>
-        <button id="right">Move Right</button>
-        <div style="height:500px; width:100%; pointer-events:painted;"><div id="monitor"></div></div>
-        <div id="iopanel">
-        </div>
+
+    <div id="sheas_container"></div>
 
     <script src="lz-string_backup.js"></script>
     <!-- <script src="https://tilk.github.io/digitaljs/main.js"></script> -->
     <script src="digitaljs_webpack_backup.js"></script>
     <script src="chips.js"></script>
+    <script src="js_builds_html/html_builders.js"></script>
+    <script src="page_builders.js"></script>
+    <script src="page_events.js"></script>
     <script src="index.js"></script>
 
 

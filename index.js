@@ -1,11 +1,24 @@
-//#region SETUP
+//#region PAGE_SETUP
 // This contains the code that loads the tool into existance at page load.
 var url, chip, circuit, monitor, monitorview, iopanel, paper;
 document.addEventListener('DOMContentLoaded', () => {
   console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
+
+  // Build the page
+  BuildSHEAS(document.getElementById('sheas_container'))
+
+  // Bind elements and events
+  BindEvents()
+
+  // Setup the page reading local memory and URL
+  setup()
+
+})
+
+function setup() {
   url = new URLSearchParams(window.location.search)
   saved_chip_state = localStorage.getItem('chip')
-  // Check if the URL actually contains some chip to load, if not load empty chip
+  // Check if the URL actually contains some chip to load, if not check for chip saved in local memory, if empty load empty chip
   if (url.get('chip')==null || url.get('chip')=='') {
     if (saved_chip_state==null || saved_chip_state=='') {
       load(get_empty_chip(), false) 
@@ -20,18 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
   display_additional_settings()
   if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='') document.getElementById('bits').value = url.get('bits')
   save_state() 
-  // setInterval(update_url, 5000);
-  window.onbeforeunload = shutdown
-})
+}
 //#endregion
 
 //#region PAGE-WIDE FUNCTIONS
-
-document.getElementById('reset').onclick = reset
-document.getElementById('reload').onclick = reload
-document.getElementById('save').onclick = save_circuit
-document.getElementById('share_chip').onclick = share_chip
-document.getElementById('share_link').onclick = share_link
 
 function shutdown() {
   save_state()
@@ -102,24 +107,6 @@ function set_url(label, new_value) {
 //#endregion
 
 //#region SIMULATION FUNCTIONS
-document.getElementById('components').onchange = display_additional_settings
-document.getElementById('add').onclick = function(){
-  selected_chip(add)
-}
-document.getElementById('load').onclick = function(){
-  selected_chip(load)
-}
-document.getElementById('remove').onclick = remove_chip
-document.getElementById('rename').onclick = rename_chip
-document.getElementById('toggle_simulation').onclick = toggle_simulation
-document.getElementById('step').onclick = step
-// document.getElementById('clock').onclick = clock
-// Handlers for zoom of signal monitors
-document.getElementById('ppt_up').onclick = (e) => { monitorview.pixelsPerTick *= 2; }
-document.getElementById('ppt_down').onclick = (e) => { monitorview.pixelsPerTick /= 2;}
-document.getElementById('left').onclick = (e) => { monitorview.start -= monitorview._width / monitorview.pixelsPerTick / 4;};
-document.getElementById('right').onclick = (e) => { monitorview.start += monitorview._width / monitorview.pixelsPerTick / 4;};
-
 
 // Counts number of currently displayed devices
 function count(device_name, chip_to_research) {
@@ -170,7 +157,11 @@ function add_bits_option() {
   bits.id = 'bits'
   document.getElementById('additional_settings').appendChild(bits)
   document.getElementById('additional_settings').innerHTML = 'of ' + document.getElementById('additional_settings').innerHTML + ' bits '
-  document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
+  if (url.get('bits')==null || url.get('bits')=='') {
+    document.getElementById('additional_settings').getElementsByTagName('input')[0].value = 1
+  } else {
+    document.getElementById('additional_settings').getElementsByTagName('input')[0].value = parseInt(url.get('bits'))
+  }
 }
 
 function add_memory_options() {
@@ -198,7 +189,7 @@ function selected_chip(callback) {
     case "clock": callback(get_clock_chip()); break;
     case "memory": callback(get_memory_chip()); break;
     case "saved_circuit": saved_chip(callback); break;
-    case "huge_circuit": huge_chip(callback); break;
+    case "clipboard_circuit": clipboard_chip(callback); break;
     case "group": callback(get_group_chip()); break;
     case "ungroup": callback(get_ungroup_chip()); break;
     case "singlecycle": singlecycle_chip(callback); break;
@@ -220,10 +211,6 @@ function toggle_simulation() {
 function step() {
   circuit.updateGates()
 }
-
-// function clock() {
-//   circuit.updateGatesNext()
-// }
 
 function remove_chip() {
   var new_chip = circuit.toJSON()
@@ -383,13 +370,7 @@ function load(chip_to_load, reload=true) {
 
 //#endregion
 
-//#region LESSON FUNCTIONS
-
-//#endregion
-
 // DEBUG FUNCTION (utility)
-document.getElementById('debug').style.visibility = 'hidden'
-document.getElementById('debug').onclick = debug
 function debug() {
   chip = get_empty_chip()
   chip.devices.dev1 = get_bus_ungroup()
