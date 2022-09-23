@@ -122,7 +122,7 @@ function VisualizationControls() {
 }
 
 function Paper() {
-    return _div( {style: 'height:500px; width:100%; overflow: scroll; pointer-events:painted;'}, _div({id: 'paper'}) )
+    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted;'}, _div({id: 'paper', style: 'background-color: white;'}) )
 }
 
 function SimulationControls() {
@@ -159,7 +159,7 @@ function MonitorControls() {
 }
 
 function Monitor() {
-    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor'}))
+    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor', style:'background-color: white;'}))
 }
 
 function MonitorDiv() {
