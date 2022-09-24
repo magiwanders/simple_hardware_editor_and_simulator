@@ -217,6 +217,7 @@ function BuildSHEAS(sheas_container) {
 
 function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
     window.onbeforeunload = shutdown
+    sheas_container.innerHTML = ''
     sheas_container.appendChild( _div({id: 'sheas'},
         [
             Paper(),
