@@ -149,7 +149,6 @@ function MonitorOrTesterControls() {
 }
 
 function MonitorControls(title=true) {
-    console.log('Title for monitor: ', title)
     return _div({id: 'monitor_controls'},
         [
             title ? _h3({id: 'monitor_title'}, 'Monitor') : _div(),
