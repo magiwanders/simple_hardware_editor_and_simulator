@@ -19,7 +19,7 @@ function setup() {
   }
   document.getElementById('components').value = url.get('select')
   display_additional_settings()
-  if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='') document.getElementById('bits').value = url.get('bits')
+  if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='' && document.getElementById('bits')!=null) document.getElementById('bits').value = url.get('bits')
   save_state()
 }
 
