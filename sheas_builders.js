@@ -247,7 +247,6 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     if (compressed_chip == undefined) {
         setup()
     } else {
-        localStorage.setItem("chip", compressed_chip);
         load(JSON.parse(LZString.decompressFromBase64(compressed_chip)), false)
     }
 }
