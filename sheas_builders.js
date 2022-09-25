@@ -241,6 +241,9 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     sheas_container.style['background-color'] = 'white'
     sheas_container.style['color'] = 'black'
     sheas_container.style['border-style'] = 'solid'
+
+    // Setup the page reading local memory and URL
+    setup()
     if (compressed_chip == undefined) {
         load(get_empty_chip())
     } else {
