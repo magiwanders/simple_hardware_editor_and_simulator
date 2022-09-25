@@ -30,7 +30,7 @@ Optionally, you can put anything inside the placeholder as it will be cleared be
 For embedding only the visualization and the simulation controls (the ones below it) use:
 
 ```javascript
-BuildSHEAS('embedded', document.getElementById('sheas_container'), <chip>)
+buildSHEAS('embedded', document.getElementById('sheas_container'), <chip>)
 ```
 
 Where ```<chip>``` is a ```string``` of the compressed chip you want to load (the one copied into the clipboard by the "Share only the chip" button).
@@ -38,5 +38,5 @@ Where ```<chip>``` is a ```string``` of the compressed chip you want to load (th
 For embedding the whole of S.H.E.A.S. use:
 
 ```javascript
-BuildSHEAS('complete', document.getElementById('sheas_container'))
+buildSHEAS('complete', document.getElementById('sheas_container'))
 ```
