@@ -8,7 +8,7 @@ function setup() {
   saved_chip_state = localStorage.getItem('chip')
   // Check if the URL actually contains some chip to load, if not check for chip saved in local memory, if empty load empty chip
   if (url.get('chip')==null || url.get('chip')=='') {
-    if (saved_chip_state==null || saved_chip_state=='') {
+    if (saved_chip_state==null || saved_chip_state=='' || saved_chip_state==undefined) {
       load(get_empty_chip(), false)
     } else {
       load(JSON.parse(LZString.decompressFromBase64(saved_chip_state)), false)
@@ -326,7 +326,7 @@ function setup() {
   }
 
   function load(chip_to_load, reload=true) {
-    console.log('LOAD')
+    console.log('LOAD:')
     console.log(chip_to_load)
     chip = chip_to_load
 
