@@ -242,5 +242,9 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     sheas_container.style['background-color'] = 'white'
     sheas_container.style['color'] = 'black'
     sheas_container.style['border-style'] = 'solid'
-    load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
+    if (compressed_chip == undefined) {
+        load(get_empty_chip())
+    } else {
+        load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
+    }
 }
