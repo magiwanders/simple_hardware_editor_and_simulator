@@ -200,7 +200,7 @@ function TesterDiv() {
     )
 }
 
-function CompleteSheas() {
+function CompleteSHEAS() {
     return _div({id: 'sheas'},
         [
             Title(),
