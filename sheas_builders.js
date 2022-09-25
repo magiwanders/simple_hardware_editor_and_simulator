@@ -121,9 +121,8 @@ function VisualizationControls() {
     )
 }
 
-function ExternalLink(compressed_chip) {
-    var link = 'https://sheas.magiwanders.com/?chip=' + compressed_chip
-    return _a({href:link, target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website')
+function ExternalLink() {
+    return _a({href:'https://sheas.magiwanders.com', target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website')
 }
 
 function Paper() {
@@ -217,10 +216,10 @@ function CompleteSHEAS() {
     )
 }
 
-function EmbeddedSHEAS(compressed_chip) {
+function EmbeddedSHEAS() {
     return _div({id: 'sheas'},
         [
-            ExternalLink(compressed_chip),
+            ExternalLink(),
             Paper(),
             SimulationControls(),
             MonitorControls(false),
@@ -230,12 +229,13 @@ function EmbeddedSHEAS(compressed_chip) {
 }
 
 function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
+    localStorage.setItem("chip", compressed_circuit);
     window.onbeforeunload = shutdown
     sheas_container.innerHTML = ''
     var sheas
     switch (embedding_type) {
         case 'complete': sheas = CompleteSHEAS(); break;
-        case 'embedded': sheas = EmbeddedSHEAS(compressed_chip); break;
+        case 'embedded': sheas = EmbeddedSHEAS(); break;
         default: break;
     }
     sheas_container.appendChild(sheas)
