@@ -38,5 +38,5 @@ Where ```<chip>``` is a ```string``` of the compressed chip you want to load (th
 For embedding the whole of S.H.E.A.S. use:
 
 ```javascript
-BuildSHEAS(document.getElementById('sheas_container')) 
+BuildCompleteSHEAS(document.getElementById('sheas_container')) 
 ```
