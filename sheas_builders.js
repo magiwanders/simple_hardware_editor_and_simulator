@@ -227,7 +227,7 @@ function EmbeddedSHEAS() {
     )
 }
 
-function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
+function buildSHEAS(embedding_type, sheas_container, compressed_chip, setup=false) {
     localStorage.setItem("chip", compressed_chip);
     window.onbeforeunload = shutdown
     sheas_container.innerHTML = ''
@@ -242,10 +242,8 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     sheas_container.style['color'] = 'black'
     sheas_container.style['border-style'] = 'solid'
 
-    // Setup the page reading local memory and URL
-    setup()
     if (compressed_chip == undefined) {
-        load(get_empty_chip())
+        if(setup) {setup()} else {load(get_empty_chip())}
     } else {
         load(JSON.parse(LZString.decompressFromBase64(compressed_chip)))
     }

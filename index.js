@@ -3,6 +3,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log("S.H.E.A.S. -> Simple Hardware Editor And Simulator!")
   // Build the page
-  buildSHEAS('complete', document.getElementById('sheas_container'))
+  buildSHEAS('complete', document.getElementById('sheas_container'), setup=true)
 })
 //#endregion
