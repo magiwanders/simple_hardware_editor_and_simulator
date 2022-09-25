@@ -119,11 +119,11 @@ function VisualizationControls() {
             _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug'),
         ]
     )
-} 
+}
 
 function ExternalLink(compressed_chip) {
     var link = 'https://sheas.magiwanders.com/?chip=' + compressed_chip
-    return _a({href:link, target: '_blank'}, 'Open PDF in another tab')
+    return _a({href:link, target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website') 
 }
 
 function Paper() {
@@ -133,7 +133,7 @@ function Paper() {
 function SimulationControls() {
  return _div({id: 'simulation_controls'},
     [
-        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or',
+        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or', 
         _button({id: 'step', onclick: 'step()'}, 'Step'), ' the simulation',
         _br(), _br()
     ]
