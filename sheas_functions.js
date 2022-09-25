@@ -179,7 +179,7 @@ var url, chip, circuit, monitor, monitorview, iopanel, paper;
       case "clipboard_circuit": clipboard_chip(callback); break;
       case "group": callback(get_group_chip()); break;
       case "ungroup": callback(get_ungroup_chip()); break;
-      case "singlecycle": singlecycle_chip(callback); break;
+      case "single_cycle": singlecycle_chip(callback); break;
       case "pipeline": pipelined_chip(callback); break;
       default: console.log("FUNCTION NOT YET IMPLEMENTED"); break;
     }
