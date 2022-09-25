@@ -76,7 +76,7 @@ function setup() {
   function save_state() {
     var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit.toJSON()))
     localStorage.setItem("chip", compressed_circuit);
-    set_url('select', document.getElementById('components').value)
+    if (document.getElementById('components')!=null) set_url('select', document.getElementById('components').value)
     if (document.getElementById('bits')) set_url('bits', document.getElementById('bits').value)
     return compressed_circuit
   }
