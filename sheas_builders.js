@@ -109,7 +109,7 @@ function RenameRow() {
 }
 
 function VisualizationControls() {
-    return _div({id: 'visualization_controls'},
+    return _div({id: 'visualization_controls', style: 'display: flex;'},
         [
             _button({id: 'reload', onclick: 'reload()'}, 'Reload'), ',',
             _button({id: 'reset', onclick: 'reset()'}, 'Reset'), ',',
