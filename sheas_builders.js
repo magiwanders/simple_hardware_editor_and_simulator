@@ -114,15 +114,19 @@ function VisualizationControls() {
             _button({id: 'reload', onclick: 'reload()'}, 'Reload'), ',',
             _button({id: 'reset', onclick: 'reset()'}, 'Reset'), ',',
             _button({id: 'save', onclick: 'save()'}, 'Save'), ',',
-            _button({id: 'share_chip', onclick: 'share_chip()'}, 'Share only the chip'), 'or',
-            _button({id: 'share_link', onclick: 'share_link()'}, 'Share circuit as link'), '.',
-            _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug'),
+            ShareButtons(),
+            _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug')
         ]
     )
 }
 
-function ExternalLink() {
-    return _a({href:'https://sheas.magiwanders.com', target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website')
+function ShareButtons() {
+    return _div({id: 'share_buttons'},
+        [
+            _button({id: 'share_chip', onclick: 'share_chip()'}, 'Share only the chip'), 'or',
+            _button({id: 'share_link', onclick: 'share_link()'}, 'Share circuit as link'), '.'
+        ]
+    )
 }
 
 function Paper() {
@@ -218,7 +222,7 @@ function CompleteSHEAS() {
 function EmbeddedSHEAS() {
     return _div({id: 'sheas'},
         [
-            ExternalLink(),
+            ShareButtons(),
             Paper(),
             SimulationControls(),
             MonitorControls(false),
