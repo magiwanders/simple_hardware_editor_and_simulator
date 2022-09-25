@@ -229,7 +229,7 @@ function EmbeddedSHEAS() {
 }
 
 function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
-    localStorage.setItem("chip", compressed_circuit);
+    localStorage.setItem("chip", compressed_chip);
     window.onbeforeunload = shutdown
     sheas_container.innerHTML = ''
     var sheas
