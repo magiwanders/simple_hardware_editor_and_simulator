@@ -17,6 +17,12 @@ Then, use a placeholder div in your HTML:
 <div id="sheas_container"></div>
 ```
 
+Optionally, you can put anything inside the placeholder as it will be cleared before containing S.H.E.A.S., for example your favourite loader:
+
+```html
+<div id="sheas_container"><div style="width:100%; height:100%" cla><div class="loader"></div></div></div>
+```
+
 For embedding only the visualization and the simulation controls (the ones below it) use:
 
 ```javascript
