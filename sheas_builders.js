@@ -123,7 +123,7 @@ function VisualizationControls() {
 
 function ExternalLink(compressed_chip) {
     var link = 'https://sheas.magiwanders.com/?chip=' + compressed_chip
-    return _a({href:link, target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website') 
+    return _a({href:link, target: '_blank'}, 'Open circuit in the S.H.E.A.S. Website')
 }
 
 function Paper() {
@@ -133,7 +133,7 @@ function Paper() {
 function SimulationControls() {
  return _div({id: 'simulation_controls'},
     [
-        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or', 
+        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or',
         _button({id: 'step', onclick: 'step()'}, 'Step'), ' the simulation',
         _br(), _br()
     ]
@@ -200,7 +200,7 @@ function TesterDiv() {
     )
 }
 
-function CompleteSheas(sheas_container, compressed_chip) {
+function CompleteSheas() {
     return _div({id: 'sheas'},
         [
             Title(),
@@ -217,7 +217,7 @@ function CompleteSheas(sheas_container, compressed_chip) {
     )
 }
 
-function EmbeddedSHEAS(sheas_container, compressed_chip) {
+function EmbeddedSHEAS(compressed_chip) {
     return _div({id: 'sheas'},
         [
             ExternalLink(compressed_chip),
@@ -235,7 +235,7 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     var sheas
     switch (embedding_type) {
         case 'complete': sheas = CompleteSHEAS(); break;
-        case 'embedded': sheas = EmbeddedSHEAS(); break;
+        case 'embedded': sheas = EmbeddedSHEAS(compressed_chip); break;
         default: break;
     }
     sheas_container.appendChild(sheas)
