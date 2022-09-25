@@ -119,6 +119,11 @@ function VisualizationControls() {
             _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug'),
         ]
     )
+} 
+
+function ExternalLink(compressed_chip) {
+    var link = 'https://sheas.magiwanders.com/?chip=' + compressed_chip
+    return _a({href:link, target: '_blank'}, 'Open PDF in another tab')
 }
 
 function Paper() {
@@ -195,10 +200,8 @@ function TesterDiv() {
     )
 }
 
-function BuildSHEAS(sheas_container) {
-    window.onbeforeunload = shutdown
-    sheas_container.innerHTML = ''
-    sheas_container.appendChild( _div({id: 'sheas'},
+function CompleteSheas(sheas_container, compressed_chip) {
+    return _div({id: 'sheas'},
         [
             Title(),
             AddOrLoadRow(),
@@ -211,21 +214,31 @@ function BuildSHEAS(sheas_container) {
             MonitorDiv(),
             TesterDiv()
         ]
-    ))
-    sheas_container.style['background-color'] = 'white'
+    )
 }
 
-function BuildEmbeddedSHEAS(sheas_container, compressed_chip) {
-    window.onbeforeunload = shutdown
-    sheas_container.innerHTML = ''
-    sheas_container.appendChild( _div({id: 'sheas'},
+function EmbeddedSHEAS(sheas_container, compressed_chip) {
+    return _div({id: 'sheas'},
         [
+            ExternalLink(compressed_chip),
             Paper(),
             SimulationControls(),
             MonitorControls(false),
             Monitor()
         ]
-    ))
+    )
+}
+
+function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
+    window.onbeforeunload = shutdown
+    sheas_container.innerHTML = ''
+    var sheas
+    switch (embedding_type) {
+        case 'complete': sheas = CompleteSHEAS(); break;
+        case 'embedded': sheas = EmbeddedSHEAS(); break;
+        default: break;
+    }
+    sheas_container.appendChild(sheas)
     sheas_container.style['background-color'] = 'white'
     sheas_container.style['color'] = 'black'
     sheas_container.style['border-style'] = 'solid'
