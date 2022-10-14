@@ -3,7 +3,7 @@ var url, chip, circuit, monitor, monitorview, iopanel, paper;
 //#region PAGE-WIDE FUNCTIONS
 
 function setup() {
-    console.log('SETUP')
+  console.log('SETUP')
   url = new URLSearchParams(window.location.search)
   saved_chip_state = localStorage.getItem('chip')
   // Check if the URL actually contains some chip to load, if not check for chip saved in local memory, if empty load empty chip

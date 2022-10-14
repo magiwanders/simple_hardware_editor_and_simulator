@@ -78,11 +78,11 @@ function AddOrLoadRow() {
                 ]
             ),
             _div({id: 'additional_settings', style: 'display: inline-block;'}),
-            'and',
+            ' and ',
             _button({id: 'add', onclick: 'selected_chip(add)'},'Add'),
-            'it to the visualization or',
+            ' it to the visualization or ',
             _button({id: 'load', onclick: 'selected_chip(load)'},'Load'),
-            'it ex novo.'
+            ' it ex novo.'
         ]
     )
 }
@@ -147,7 +147,7 @@ function MonitorOrTesterControls() {
     return _div({id: 'monitor_or_tester_controls'},
         [
             _button({id: 'show_monitor', onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
-            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab')
+            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab <todo>')
         ]
     )
 }
