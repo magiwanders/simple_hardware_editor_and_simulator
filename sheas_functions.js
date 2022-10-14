@@ -84,7 +84,7 @@ function setup() {
 
   function save_state(id) {
     if (id==undefined) id=default_id
-    var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit[default_id].toJSON()))
+    var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit[id].toJSON()))
     localStorage.setItem("chip_"+default_id, compressed_circuit);
     if (document.getElementById('components_'+default_id)!=null) set_url('select', document.getElementById('components_'+default_id).value)
     if (document.getElementById('bits')) set_url('bits', document.getElementById('bits').value)
