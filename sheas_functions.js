@@ -74,7 +74,7 @@ function setup() {
     if (compressed_circuit.length > 30000) {
       alert('Circuit too big to be shared by URL. Use the "Share the chip" button and load it in another SHEAS window with the "Circuit in Clipboard" option, while still holding the chip in the clipboard.')
     } else {
-      compressed_circuit = save_state()
+      compressed_circuit = save_state(id)
       var url_params = new URLSearchParams()
       url_params.set('chip', compressed_circuit)
       navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url_params.toString());
@@ -82,7 +82,8 @@ function setup() {
     setTimeout(() => {document.getElementById('share_link_'+id).innerHTML = 'Share as link'}, 3000);
   }
 
-  function save_state() {
+  function save_state(id) {
+    if (id==undefined) id=default_id
     var compressed_circuit = LZString.compressToBase64(JSON.stringify(circuit[default_id].toJSON()))
     localStorage.setItem("chip_"+default_id, compressed_circuit);
     if (document.getElementById('components_'+default_id)!=null) set_url('select', document.getElementById('components_'+default_id).value)
