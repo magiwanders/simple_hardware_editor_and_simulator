@@ -8,8 +8,17 @@ function read_remote_file(file, callback, name)
         {
             if(rawFile.status === 200 || rawFile.status == 0)
             {
-                var allText = JSON.parse(rawFile.responseText);
-                callback(allText, true, name, false);
+                var to_callback = JSON.parse(rawFile.responseText);
+                if (callback.name=='add') {
+                    if ( (count('Button', to_callback)==0 && count('NumEntry', to_callback)==0) || (count('Lamp', to_callback)==0 && count('NumDisplay', to_callback)==0) ) {
+                        alert('The chip you are trying to load should have at least one input (button) AND one output (lamp). Your chip does not.')
+                        return;
+                    } else {
+                        callback(to_callback, is_subcircuit=true, name, as_component=false)
+                    }
+                } else if (callback.name=='load') {
+                    callback(to_callback, true, default_id)
+                }
             }
         }
     }
@@ -165,9 +174,18 @@ return {
 }
 }
 
+function get_debug_chip() {
+    return {
+        type: "Clock",
+        label: "clock_debug",
+        net: "clock_debug",
+        bits:1
+    }
+    }
+
 // Retrieves the saved chip that the user wants to <callback>.
 // <callback> can be either add to or load into the simulation
-function saved_chip(callback) {
+function saved_chip(callback, default_id) {
     var last_read_file = undefined
     var input = document.createElement('input'); 
     input.type = 'file';
@@ -178,7 +196,7 @@ function saved_chip(callback) {
       reader.onload = readerEvent => {
         var loaded_chip = JSON.parse(readerEvent.target.result);
         // console.log('Loaded chip from file: ' + loaded_chip)
-        callback(loaded_chip, true, last_read_file.name.split('.')[0])
+        callback(loaded_chip, true, id=default_id, subcircuit_type=last_read_file.name.split('.')[0])
       }
       e.target.value = null
     }
@@ -188,7 +206,17 @@ function saved_chip(callback) {
 function clipboard_chip(callback) {
     navigator.clipboard.readText()
         .then(content => {
-            callback(JSON.parse(LZString.decompressFromBase64(content)),  is_subcircuit=true, as_component=true)
+            var to_callback = JSON.parse(LZString.decompressFromBase64(content))
+            if (callback.name=='add') {
+                if ( (count('Button', to_callback)==0 && count('NumEntry', to_callback)==0) || (count('Lamp', to_callback)==0 && count('NumDisplay', to_callback)==0) ) {
+                    alert('The chip you are trying to load should have at least one input (button) AND one output (lamp). Your chip does not.')
+                    return;
+                } else {
+                    callback(to_callback, is_subcircuit=true, as_component=false)
+                }
+            } else if (callback.name=='load') {
+                callback(to_callback, true, default_id)
+            }
         })
 }
 

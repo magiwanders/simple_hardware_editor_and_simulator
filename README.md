@@ -33,6 +33,8 @@ For embedding only the visualization and the simulation controls (the ones below
 buildSHEAS('embedded', document.getElementById('sheas_container'), <chip>)
 ```
 
+The embedded version can be used more than once per page.
+
 Where ```<chip>``` is a ```string``` of the compressed chip you want to load (the one copied into the clipboard by the "Share only the chip" button).
 
 For embedding the whole of S.H.E.A.S. use:
@@ -40,3 +42,5 @@ For embedding the whole of S.H.E.A.S. use:
 ```javascript
 buildSHEAS('complete', document.getElementById('sheas_container'))
 ```
+
+The whole of S.H.E.A.S. can be embedded only once in a page.

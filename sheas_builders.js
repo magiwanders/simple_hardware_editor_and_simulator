@@ -1,7 +1,8 @@
-const version = 'v1.1'
+const version = 'v1.2'
+var build_id = ''
 
 function Title() {
-    return _div({id:'title'},
+    return _div({id:'title_'+build_id},
         [
             _h1({style: 'display: inline-block;'}, 'Simple Hardware Editor And Simulator'),
             version
@@ -10,10 +11,10 @@ function Title() {
 }
 
 function AddOrLoadRow() {
-    return _div({id: 'add_or_load_line'},
+    return _div({id: 'add_or_load_line_'+build_id},
         [
             _label({for: 'components'}, 'Choose a component'),
-            _select({id: 'components', name: 'components', onchange: 'display_additional_settings()'},
+            _select({id: 'components_'+build_id, name: 'components', onchange: 'display_additional_settings()'},
                 [
                     _option({value: 'saved_circuit'},'Saved Circuit'),
                     _option({value: 'clipboard_circuit'},'Circuit from Clipboard'),
@@ -77,101 +78,101 @@ function AddOrLoadRow() {
                     )
                 ]
             ),
-            _div({id: 'additional_settings', style: 'display: inline-block;'}),
+            _div({id: 'additional_settings_'+build_id, style: 'display: inline-block;'}),
             ' and ',
-            _button({id: 'add', onclick: 'selected_chip(add)'},'Add'),
+            _button({id: 'add_'+build_id, onclick: 'selected_chip(add)'},'Add'),
             ' it to the visualization or ',
-            _button({id: 'load', onclick: 'selected_chip(load)'},'Load'),
+            _button({id: 'load_'+build_id, onclick: 'selected_chip(load)'},'Load'),
             ' it ex novo.'
         ]
     )
 }
 
 function RemoveRow() {
-    return _div({id: 'remove_line'},
+    return _div({id: 'remove_line_'+build_id},
         [
-            _input({type: 'text', name: 'to_remove', id: 'to_remove', placeholder: 'Name the Component'},),
+            _input({type: 'text', name: 'to_remove_'+build_id, id: 'to_remove_'+build_id, placeholder: 'Name the Component'},),
             'to',
-            _button({id: 'remove', onclick: 'remove_chip()'},'Remove')
+            _button({id: 'remove_'+build_id, onclick: 'remove_chip()'},'Remove')
         ]
     )
 }
 
 function RenameRow() {
-    return _div({id: 'rename_line'},
+    return _div({id: 'rename_line_'+build_id},
         [
             _button({id: 'rename', onclick: 'rename_chip()'},'Rename'),
-            _input({type: 'text', name: 'to_rename', id: 'to_rename', placeholder: 'Component to Rename'},),
+            _input({type: 'text', name: 'to_rename', id: 'to_rename_'+build_id, placeholder: 'Component to Rename'},),
             'to',
-            _input({type: 'text', name: 'new_rename', id: 'new_name', placeholder: 'New Name'},),
+            _input({type: 'text', name: 'new_rename', id: 'new_name_'+build_id, placeholder: 'New Name'},),
         ]
     )
 }
 
 function VisualizationControls() {
-    return _div({id: 'visualization_controls', style: 'display: flex;'},
+    return _div({id: 'visualization_controls_'+build_id, style: 'display: flex;'},
         [
-            _button({id: 'reload', onclick: 'reload()'}, 'Reload'), ',',
-            _button({id: 'reset', onclick: 'reset()'}, 'Reset'), ',',
-            _button({id: 'save', onclick: 'save()'}, 'Save'), ',',
+            _button({id: 'reload_'+build_id, onclick: 'reload()'}, 'Reload'), ',',
+            _button({id: 'reset_'+build_id, onclick: 'reset()'}, 'Reset'), ',',
+            _button({id: 'save_'+build_id, onclick: 'save()'}, 'Save'), ',',
             ShareButtons(),
-            _button({id: 'debug', onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug')
+            _button({id: 'debug_'+build_id, onclick: 'debug()', style: 'visibility: hidden;'}, 'Debug')
         ]
     )
 }
 
 function ShareButtons() {
-    return _div({id: 'share_buttons'},
+    return _div({id: 'share_buttons_'+build_id},
         [
-            _button({id: 'share_chip', onclick: 'share_chip()'}, 'Share only the chip'), 'or',
-            _button({id: 'share_link', onclick: 'share_link()'}, 'Share circuit as link'), '.'
+            _button({id: 'share_chip_'+build_id, onclick: 'share_chip(event)'}, 'Share only the chip'), 'or',
+            _button({id: 'share_link_'+build_id, onclick: 'share_link(event)'}, 'Share circuit as link'), '.'
         ]
     )
 }
 
 function Paper() {
-    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted; scrollbar-color: white'}, _div({id: 'paper'}) )
+    return _div( {style: 'max-height:500px; width:100%; overflow: scroll; pointer-events:painted; scrollbar-color: white'}, _div({id: 'paper_'+build_id}) )
 }
 
 function SimulationControls() {
- return _div({id: 'simulation_controls'},
+ return _div({id: 'simulation_controls_'+build_id},
     [
-        _button({id: 'toggle_simulation', onclick: 'toggle_simulation()'}, 'Pause'), 'or',
-        _button({id: 'step', onclick: 'step()'}, 'Step'), ' the simulation',
+        _button({id: 'toggle_simulation_'+build_id, onclick: 'toggle_simulation(event)'}, 'Pause'), 'or',
+        _button({id: 'step_'+build_id, onclick: 'step(event)'}, 'Step'), ' the simulation',
         _br(), _br()
     ]
  )
 }
 
 function MonitorOrTesterControls() {
-    return _div({id: 'monitor_or_tester_controls'},
+    return _div({id: 'monitor_or_tester_controls_'+build_id},
         [
-            _button({id: 'show_monitor', onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
-            _button({id: 'show_tester', onclick: 'monitor_or_tester("tester")'}, 'Tester Tab <todo>')
+            _button({id: 'show_monitor_'+build_id, onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
+            _button({id: 'show_tester_'+build_id, onclick: 'monitor_or_tester("tester")'}, 'Tester Tab <todo>')
         ]
     )
 }
 
 function MonitorControls(title=true) {
-    return _div({id: 'monitor_controls'},
+    return _div({id: 'monitor_controls_'+build_id},
         [
-            title ? _h3({id: 'monitor_title'}, 'Monitor') : _div(),
+            title ? _h3({id: 'monitor_title_'+build_id}, 'Monitor') : _div(),
             'Click on the blue looking glass that pops up hovering wires to track them below.',
             _br(), 'Monitor',
-            _button({id: 'zoom_in', onclick: 'zoom_in()'}, 'Zoom In'),
-            _button({id: 'zoom_out', onclick: 'zoom_out()'}, 'Zoom Out'),
-            _button({id: 'move_left', onclick: 'move_left()'}, 'Move Left'),
-            _button({id: 'move_right', onclick: 'move_right()'}, 'Move Right'),
+            _button({id: 'zoom_in_'+build_id, onclick: 'zoom_in(event)'}, 'Zoom In'),
+            _button({id: 'zoom_out_'+build_id, onclick: 'zoom_out(event)'}, 'Zoom Out'),
+            _button({id: 'move_left_'+build_id, onclick: 'move_left(event)'}, 'Move Left'),
+            _button({id: 'move_right_'+build_id, onclick: 'move_right(event)'}, 'Move Right'),
         ]
     )
 }
 
 function Monitor() {
-    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor'}))
+    return _div({style: 'width:100%; pointer-events:painted;'},_div({id: 'monitor_'+build_id}))
 }
 
 function MonitorDiv() {
-    return _div({id: 'monitor_div', style: 'display: block;'},
+    return _div({id: 'monitor_div_'+build_id, style: 'display: block;'},
         [
             MonitorControls(),
             Monitor(),
@@ -190,11 +191,11 @@ function TesterControls() {
 }
 
 function Tester() {
-    return _div({id: 'iopanel'})
+    return _div({id: 'iopanel_'+build_id})
 }
 
 function TesterDiv() {
-    return _div({id: 'tester_div', style: 'display: none;'},
+    return _div({id: 'tester_div_'+build_id, style: 'display: none;'},
             [
                 TesterControls(),
                 Tester()
@@ -203,7 +204,7 @@ function TesterDiv() {
 }
 
 function CompleteSHEAS() {
-    return _div({id: 'sheas'},
+    return _div({id: 'sheas_'+build_id},
         [
             Title(),
             AddOrLoadRow(),
@@ -220,7 +221,7 @@ function CompleteSHEAS() {
 }
 
 function EmbeddedSHEAS() {
-    return _div({id: 'sheas'},
+    return _div({id: 'sheas_'+build_id},
         [
             ShareButtons(),
             Paper(),
@@ -234,6 +235,7 @@ function EmbeddedSHEAS() {
 function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     window.onbeforeunload = shutdown
     sheas_container.innerHTML = ''
+    build_id = sheas_container.id
     var sheas
     switch (embedding_type) {
         case 'complete': sheas = CompleteSHEAS(); break;
@@ -247,6 +249,6 @@ function buildSHEAS(embedding_type, sheas_container, compressed_chip) {
     if (compressed_chip == undefined) {
         setup()
     } else {
-        load(JSON.parse(LZString.decompressFromBase64(compressed_chip)), false)
+        load(JSON.parse(LZString.decompressFromBase64(compressed_chip)), false, build_id)
     }
 }
