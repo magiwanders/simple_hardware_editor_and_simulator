@@ -79,7 +79,7 @@ function setup() {
       url_params.set('chip', compressed_circuit)
       navigator.clipboard.writeText('https://sheas.magiwanders.com/?' + url_params.toString());
     }
-    setTimeout(() => {document.getElementById('share_link').innerHTML = 'Share as link'}, 3000);
+    setTimeout(() => {document.getElementById('share_link_'+id).innerHTML = 'Share as link'}, 3000);
   }
 
   function save_state() {
