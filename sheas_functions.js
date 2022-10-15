@@ -240,6 +240,8 @@ function setup() {
   function remove_chip() {
     var new_chip = circuit[default_id].toJSON()
     var to_remove = document.getElementById("to_remove_"+default_id).value
+
+    // Remove the chip
     var key_to_remove = undefined
     for (var key in new_chip['devices']) {
       if (new_chip['devices'][key].label == to_remove) {
@@ -248,6 +250,14 @@ function setup() {
       }
     }
 
+    // Remove connection to and from that chip
+    for (var connection in new_chip['connectors']) {
+      if (new_chip['connectors'][connection].from.id == key_to_remove || new_chip['connectors'][connection].to.id == key_to_remove) {
+        delete new_chip['connectors'][connection]
+      }
+    }
+
+    // Rename devN name of chip to let them be in order
     var i = 0
     var keys = new_chip['devices']
     new_chip['devices'] = {}
@@ -265,12 +275,7 @@ function setup() {
       }
     }
 
-    for (var connection in new_chip['connectors']) {
-      if (new_chip['connectors'][connection].from.id == key_to_remove || new_chip['connectors'][connection].to.id == key_to_remove) {
-        delete new_chip['connectors'][connection]
-      }
-    }
-
+    // Rename connections to let them be in order
     var i = 0
     var connections = new_chip['connectors']
     new_chip['connectors'] = []
@@ -278,6 +283,7 @@ function setup() {
       new_chip['connectors'][i] = connections[connection]
       i += 1
     }
+
     load(new_chip, true, default_id)
   }
 
