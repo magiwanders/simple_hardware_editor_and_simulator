@@ -40,7 +40,7 @@ class Tester {
             head: [
                 {
                     colspan: inputs.length+outputs.length+1,
-                    innerText: 'Tests'
+                    innerText: 'Tests',
                 },
                 {
                     colspan: outputs.length*2,
@@ -127,12 +127,15 @@ class Tester {
 
     runAll(event) {
         console.log('Run All Tests')
+        for (var i=0; i<this.tableModel.body.length-2; i++) {
+            this.runTest(_, i+1)
+        }
     }
 
-    runTest(event) {
+    runTest(event, n) {
         var inputs = this.model.getInputCells()
         var outputs = this.model.getOutputCells()
-        var n = parseInt(retrieve_id('run_test', event.target.id))
+        if (n==undefined) n = parseInt(retrieve_id('run_test', event.target.id))
         console.log('Running Test: ' + n)
         var row = this.tableModel.body[n+1]
 
@@ -157,9 +160,13 @@ class Tester {
         // Check output
         for (var output of outputs) {
             var value_to_check = document.getElementById('checkbox_'+n+'_'+output.attributes.label).checked
-            console.log('TEST PASSED?')
-            console.log(circuit['sheas_container'].getOutputCells()[outputs.indexOf(output)].get('inputSignals').in.isHigh==value_to_check)        
+            var test_passed = circuit['sheas_container'].getOutputCells()[outputs.indexOf(output)].get('inputSignals').in.isHigh==value_to_check
+            this.tableModel.body[n+1][inputs.length+outputs.length+outputs.indexOf(output)+1].background = test_passed ? 'green' : 'red'  
+            this.tableModel.body[n+1][inputs.length+outputs.length+outputs.indexOf(output)+1].innerText = value_to_check ? '1' : '0'
         }
+
+        console.log(this.tableModel)
+        this.render(Table(this.tableModel))
     }
 }
 
