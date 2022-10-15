@@ -1,4 +1,4 @@
-var url, chip={}, circuit={}, monitor={}, monitorview={}, iopanel={}, paper={};
+var url, chip={}, circuit={}, monitor={}, monitorview={}, iopanel={}, paper={}, tester={};
 
 var default_id = 'sheas_container'
 chip[default_id] = {
@@ -26,6 +26,7 @@ function setup() {
   }
   document.getElementById('components_'+default_id).value = url.get('select')
   display_additional_settings()
+  monitor_or_tester(url.get('monitor_or_tester'))
   if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='' && document.getElementById('bits')!=null) document.getElementById('bits').value = url.get('bits')
   save_state()
 }
@@ -88,6 +89,8 @@ function setup() {
     localStorage.setItem("chip_"+default_id, compressed_circuit);
     if (document.getElementById('components_'+default_id)!=null) set_url('select', document.getElementById('components_'+default_id).value)
     if (document.getElementById('bits')) set_url('bits', document.getElementById('bits').value)
+    if (document.getElementById('monitor_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'monitor')
+    if (document.getElementById('tester_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'tester')
     return compressed_circuit
   }
 
@@ -237,9 +240,19 @@ function setup() {
     circuit[id].updateGates()
   }
 
-  function remove_chip() {
+  function remove_chips() {
     var new_chip = circuit[default_id].toJSON()
-    var to_remove = document.getElementById("to_remove_"+default_id).value
+    var chips_to_remove = document.getElementById("to_remove_"+default_id).value.replace(/\s/g, '').split(',');
+
+    console.log(chips_to_remove)
+
+    for (var i=0; i<chips_to_remove.length; i++) new_chip = remove_chip(chips_to_remove[i], new_chip)
+
+    load(new_chip, true, default_id)
+  }
+
+  function remove_chip(to_remove, new_chip) {
+    console.log('REMOVE ', to_remove)
 
     // Remove the chip
     var key_to_remove = undefined
@@ -284,7 +297,7 @@ function setup() {
       i += 1
     }
 
-    load(new_chip, true, default_id)
+    return new_chip
   }
 
   function rename_chip() {
@@ -377,7 +390,8 @@ function setup() {
     circuit[id] = new digitaljs.Circuit(chip[id]);
     monitor[id] = new digitaljs.Monitor(circuit[id]);
     monitorview[id] = new digitaljs.MonitorView({model: monitor[id], el: $('#monitor_'+id) });
-    iopanel[id] = new digitaljs.IOPanelView({model: circuit[id], el: $('#iopanel_'+id) });
+    // iopanel[id] = new digitaljs.IOPanelView({model: circuit[id], el: $('#iopanel_'+id) });
+    tester[id] = new Tester(circuit[id], document.getElementById('tester_'+id));
     paper[id] = circuit[id].displayOn($('#paper_'+id));
 
     // Reinstate simulation
@@ -388,8 +402,9 @@ function setup() {
     }
     monitorview[id].live = true
 
-    monitor[id].on('add', () => {
+    monitor[id].bind('add', (event) => {
       var keys = Object.keys(monitorview)
+      console.log('TODO: Retrieve monitor[id] from: ', event)
       for(var i=0; i<keys.length; i++) monitorview[keys[i]]._drawAll()
     });
 

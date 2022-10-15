@@ -91,9 +91,9 @@ function AddOrLoadRow() {
 function RemoveRow() {
     return _div({id: 'remove_line_'+build_id},
         [
-            _input({type: 'text', name: 'to_remove_'+build_id, id: 'to_remove_'+build_id, placeholder: 'Name the Component'},),
+            _input({type: 'text', name: 'to_remove_'+build_id, id: 'to_remove_'+build_id, placeholder: 'Name the Components (comma separated)', size: '30'},),
             'to',
-            _button({id: 'remove_'+build_id, onclick: 'remove_chip()'},'Remove')
+            _button({id: 'remove_'+build_id, onclick: 'remove_chips()'},'Remove')
         ]
     )
 }
@@ -148,7 +148,7 @@ function MonitorOrTesterControls() {
     return _div({id: 'monitor_or_tester_controls_'+build_id},
         [
             _button({id: 'show_monitor_'+build_id, onclick: 'monitor_or_tester("monitor")'}, 'Monitor Tab'),
-            _button({id: 'show_tester_'+build_id, onclick: 'monitor_or_tester("tester")'}, 'Tester Tab <todo>')
+            _button({id: 'show_tester_'+build_id, onclick: 'monitor_or_tester("tester")'}, 'Tester Tab')
         ]
     )
 }
@@ -181,24 +181,27 @@ function MonitorDiv() {
 }
 
 function TesterControls() {
-    return _div({id: 'tester_controls'},
+    return _div({id: 'tester_controls_'+build_id},
         [
-            _h3({id: 'tester_title'}, 'Tester'),
-            '(this is the digitaljs IOPanel, it will be substituted by a more advanced tester.)',
-            _br(), _br()
         ]
     )
 }
 
-function Tester() {
-    return _div({id: 'iopanel_'+build_id})
+// function IOPanel() {
+//     return _div({id: 'iopanel_'+build_id})
+// }
+
+function TesterPanel() {
+    return _div({id: 'tester_'+build_id})
 }
 
 function TesterDiv() {
     return _div({id: 'tester_div_'+build_id, style: 'display: none;'},
             [
-                TesterControls(),
-                Tester()
+                _h3({id: 'tester_title'}, 'Tester'),
+                // _br(), _br(),
+                // IOPanel(),
+                TesterPanel()
             ]
     )
 }
