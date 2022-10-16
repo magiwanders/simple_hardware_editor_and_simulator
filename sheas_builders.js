@@ -198,7 +198,7 @@ function TesterPanel() {
 function TesterDiv() {
     return _div({id: 'tester_div_'+build_id, style: 'display: none;'},
             [
-                _h3({id: 'tester_title'}, 'Tester'),
+                _h3({id: 'tester_title'}, 'Tester <wip>'),
                 // _br(), _br(),
                 // IOPanel(),
                 TesterPanel()

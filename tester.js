@@ -30,7 +30,7 @@ class Tester {
             } )
 
         var output_names = []
-        for (var output of outputs) output_names.unshift( {
+        for (var output of outputs) output_names.push( {
             colspan: 1,
             innerText: output.attributes.label
             } )
@@ -97,15 +97,15 @@ class Tester {
         var output_delays = []
 
         for (var output of outputs) {
-            output_contents.unshift( {
+            output_contents.push( {
                 colspan: 1,
                 innerText: _input({id: 'checkbox_'+(this.tableModel.body.length-1)+'_'+output.attributes.label, type:'checkbox'})
             } )
-            output_values.unshift( {
+            output_values.push( {
                 colspan: 1,
                 innerText: 'x'
             } )
-            output_delays.unshift( {
+            output_delays.push( {
                 colspan: 1,
                 innerText: 'd'
             } )
