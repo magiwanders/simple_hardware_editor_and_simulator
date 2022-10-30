@@ -201,7 +201,7 @@ function TesterDiv() {
                 _h3({id: 'tester_title'}, 'Tester <wip>'),
                 // _br(), _br(),
                 // IOPanel(),
-                TesterPanel()
+                // TesterPanel()
             ]
     )
 }
