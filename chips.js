@@ -195,8 +195,12 @@ function saved_chip(callback, default_id) {
       reader.readAsText(last_read_file,'UTF-8');
       reader.onload = readerEvent => {
         var loaded_chip = JSON.parse(readerEvent.target.result);
-        // console.log('Loaded chip from file: ' + loaded_chip)
-        callback(loaded_chip, true, id=default_id, subcircuit_type=last_read_file.name.split('.')[0])
+        // console.log('Loaded chip from file: ' + last_read_file.name.split('.')[0])
+        if (callback.name == 'add') {
+            callback(loaded_chip, true, last_read_file.name.split('.')[0], false)
+        } else if (callback.name == 'load') {
+            callback(loaded_chip, true, default_id)
+        }
       }
       e.target.value = null
     }

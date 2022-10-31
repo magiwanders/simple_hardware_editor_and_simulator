@@ -367,14 +367,16 @@ function setup() {
 
   function load(chip_to_load, reload=true, id=default_id) {
     console.log('[' + id + '] LOAD:')
-    console.log(chip_to_load)
     chip[id] = chip_to_load
+    console.log(chip[id])
 
     // This happens when loading a component into the canvas not as blackbox but showing internals
     if (chip_to_load['devices']==null) {
+      console.log('As component')
       var component = chip_to_load
       chip[id] = get_empty_chip()
       chip[id]['devices']['dev0'] = component
+      console.log(chip[id])
     }
 
     // Reinstantiate circuit
