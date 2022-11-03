@@ -89,8 +89,8 @@ function setup() {
     localStorage.setItem("chip_"+default_id, compressed_circuit);
     if (document.getElementById('components_'+default_id)!=null) set_url('select', document.getElementById('components_'+default_id).value)
     if (document.getElementById('bits')) set_url('bits', document.getElementById('bits').value)
-    if (document.getElementById('monitor_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'monitor')
-    if (document.getElementById('tester_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'tester')
+    if (document.getElementById('monitor_div_'+default_id)!=undefined && document.getElementById('monitor_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'monitor')
+    if (document.getElementById('tester_div_'+default_id)!=undefined && document.getElementById('tester_div_'+default_id).style.display=='block') set_url('monitor_or_tester', 'tester')
     return compressed_circuit
   }
 
