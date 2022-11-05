@@ -393,7 +393,7 @@ function setup() {
     monitor[id] = new digitaljs.Monitor(circuit[id]);
     monitorview[id] = new digitaljs.MonitorView({model: monitor[id], el: $('#monitor_'+id) });
     // iopanel[id] = new digitaljs.IOPanelView({model: circuit[id], el: $('#iopanel_'+id) });
-    // tester[id] = new Tester(circuit[id], document.getElementById('tester_'+id));
+    tester[id] = new Tester(circuit[id], document.getElementById('tester_'+id));
     paper[id] = circuit[id].displayOn($('#paper_'+id));
 
     // Reinstate simulation
