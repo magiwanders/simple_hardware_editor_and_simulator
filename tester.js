@@ -5,8 +5,7 @@ class Tester {
         this.name = 'tests'
         this.tableModel = this._generateTableModel()
         this.render(Table(this.tableModel));
-        this.model._graph.on('add', this.render)
-        this.model._graph.on('add', this.render)
+        // this.model._graph.on('add', this.render)
         // this.listenTo(this.model._graph, 'add', this._handleAdd);
         // this.listenTo(this.model._graph, 'remove', this._handleRemove);
         // this.listenTo(this.model, "display:add", () => { this.render() });
