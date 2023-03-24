@@ -26,7 +26,7 @@ function setup() {
   }
   document.getElementById('components_'+default_id).value = url.get('select')
   display_additional_settings()
-  monitor_or_tester(url.get('monitor_or_tester'))
+  // monitor_or_tester(url.get('monitor_or_tester'))
   if (url.get('bits')!=undefined && url.get('bits')!=null && url.get('bits')!='' && document.getElementById('bits')!=null) document.getElementById('bits').value = url.get('bits')
   save_state()
 }
@@ -174,10 +174,10 @@ function setup() {
     document.getElementById('additional_settings_'+default_id).getElementsByTagName('input')[0].value = 1
   }
 
-  function monitor_or_tester(which) {
-    document.getElementById('monitor_div_'+default_id).style.display = which=='monitor' ? 'block' : 'none';
-    document.getElementById('tester_div_'+default_id).style.display = which=='tester' ? 'block' : 'none';
-  }
+  // function monitor_or_tester(which) {
+  //   document.getElementById('monitor_div_'+default_id).style.display = which=='monitor' ? 'block' : 'none';
+  //   document.getElementById('tester_div_'+default_id).style.display = which=='tester' ? 'block' : 'none';
+  // }
 
   function zoom_in(event) {
     var id = retrieve_id('zoom_in', event.target.id)
@@ -390,10 +390,10 @@ function setup() {
     delete(paper[id])
     delete(monitor[id])
     circuit[id] = new digitaljs.Circuit(chip[id]);
-    monitor[id] = new digitaljs.Monitor(circuit[id]);
-    monitorview[id] = new digitaljs.MonitorView({model: monitor[id], el: $('#monitor_'+id) });
+    // monitor[id] = new digitaljs.Monitor(circuit[id]);
+    // monitorview[id] = new digitaljs.MonitorView({model: monitor[id], el: $('#monitor_'+id) });
     // iopanel[id] = new digitaljs.IOPanelView({model: circuit[id], el: $('#iopanel_'+id) });
-    tester[id] = new Tester(circuit[id], document.getElementById('tester_'+id));
+    // tester[id] = new Tester(circuit[id], document.getElementById('tester_'+id));
     paper[id] = circuit[id].displayOn($('#paper_'+id));
 
     // Reinstate simulation
@@ -402,18 +402,18 @@ function setup() {
     } else {
       circuit[id].start();
     }
-    monitorview[id].live = true
+    // monitorview[id].live = true
 
-    monitor[id].bind('add', (event) => {
-      var keys = Object.keys(monitorview)
-      console.log('TODO: Retrieve monitor[id] from: ', event)
-      for(var i=0; i<keys.length; i++) monitorview[keys[i]]._drawAll()
-    });
+    // monitor[id].bind('add', (event) => {
+    //   var keys = Object.keys(monitorview)
+    //   console.log('TODO: Retrieve monitor[id] from: ', event)
+    //   for(var i=0; i<keys.length; i++) monitorview[keys[i]]._drawAll()
+    // });
 
-    monitorview[id].on('change', (event) => {
-      var keys = Object.keys(monitorview)
-      for(var i=0; i<keys.length; i++) monitorview[keys[i]]._drawAll()
-    })
+    // monitorview[id].on('change', (event) => {
+    //   var keys = Object.keys(monitorview)
+    //   for(var i=0; i<keys.length; i++) monitorview[keys[i]]._drawAll()
+    // })
     
     document.getElementById('paper_'+id).setAttribute('pointer-events', 'all')
     document.getElementById('paper_'+id).setAttribute('pointer-events', 'painted')

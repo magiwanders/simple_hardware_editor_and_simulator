@@ -216,9 +216,9 @@ function CompleteSHEAS() {
             VisualizationControls(),
             Paper(),
             SimulationControls(),
-            MonitorOrTesterControls(),
-            MonitorDiv(),
-            TesterDiv()
+            // MonitorOrTesterControls(),
+            // MonitorDiv(),
+            // TesterDiv()
         ]
     )
 }
