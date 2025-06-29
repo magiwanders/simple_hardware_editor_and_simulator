@@ -1,6 +1,3 @@
 [submodule "digitaljs"]
 	path = submodules/digitaljs
 	url = https://github.com/tilk/digitaljs.git
-[submodule "js_builds_html"]
-	path = submodules/js_builds_html
-	url = https://github.com/magiwanders/js_builds_html.git
